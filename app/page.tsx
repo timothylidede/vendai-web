@@ -32,25 +32,25 @@ export default function HomePage() {
 
           <nav className="hidden md:flex items-center gap-8">
             <a
-              href="#features"
+              href="/features"
               className="text-base font-bold text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
             >
               features.
             </a>
             <a
-              href="#pricing"
+              href="/pricing"
               className="text-base font-bold text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
             >
               pricing.
             </a>
             <a
-              href="#retailers"
+              href="/retailers"
               className="text-base font-bold text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
             >
               retailers.
             </a>
             <a
-              href="#distributors"
+              href="/distributors"
               className="text-base font-bold text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
             >
               distributors.
@@ -110,7 +110,7 @@ export default function HomePage() {
                 </span>
               </h1>
             <p className="text-lg font-bold md:text-xl leading-relaxed max-w-3xl mx-auto opacity-90">
-              built with care.
+              vendai is a retail assistant, built with care.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8 z-10">
@@ -158,7 +158,7 @@ export default function HomePage() {
       {/* Trusted Brands Section */}
       <section className="bg-[#111111] py-12">
         <div className="container mx-auto max-w-5xl">
-          <h2 className="text-center text-white text-xl mt-30 mb-15 font-mono opacity-50">
+          <h2 className="text-center font-bold text-white text-xl mt-30 mb-15 font-mono opacity-50">
             trusted by leading consumer brands.
           </h2>
           <div className="flex flex-col space-y-10">
@@ -183,16 +183,26 @@ export default function HomePage() {
       </section>
 
       {/* Features Section - Updated with Glass Cards */}
-      <section id="features" className="py-20 px-4 bg-white dark:bg-[#111111] relative">
+      <section id="features" className="py-20 mt-20 px-4 bg-white dark:bg-[#111111] relative">
         <div className="container mx-auto max-w-6xl">
-          <AnimateIn className="text-center mb-16">
-            <h2 className="text-2xl md:text-3xl font-semibold mb-4 font-thin md:font-normal text-black dark:text-white">
-              everything you need.
+          <div className="flex justify-between items-start mb-16">
+            <AnimateIn className="max-w-2xl">
+                          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-black dark:text-white">
+              the retail assistant.
             </h2>
-            <p className="text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto font-thin">
-              inventory management, ai insights, and distributor connections in one platform.
+            <p className="text-base text-gray-600 dark:text-gray-400 max-w-2xl font-medium">
+             faster inventory management, insights, and distributor connections in one platform.
             </p>
-          </AnimateIn>
+            </AnimateIn>
+            <AnimateIn>
+              <Button
+                size="sm"
+                className="text-base font-bold bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 h-10"
+              >
+                see more features.
+              </Button>
+            </AnimateIn>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-8 mt-16">
             {/* AI Inventory Assistant Card */}
@@ -204,20 +214,26 @@ export default function HomePage() {
                 {/* Glass card */}
                 <div className="relative bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-white/10 dark:border-white/10 rounded-3xl p-8 transition-all duration-500 group-hover:transform group-hover:-translate-y-2 group-hover:bg-white/8 dark:group-hover:bg-white/8 group-hover:border-white/20 min-h-[400px] flex flex-col">
                   <div className="mb-6">
-                    <h3 className="text-xl font-semibold mb-4 font-thin text-black dark:text-white">intelligent assistant</h3>
-                    <p className="text-gray-600 dark:text-gray-400 font-thin text-sm leading-relaxed">
+                    <h3 className="text-xl font-bold mb-4 text-black dark:text-white">intelligent assistant</h3>
+                    <p className="text-gray-600 dark:text-gray-400 font-medium text-sm leading-relaxed">
                       understands your business and helps you make smarter decisions.
                     </p>
                   </div>
                   
-                  {/* Image placeholder space */}
-                  <div className="flex-1 bg-white/5 dark:bg-white/5 rounded-2xl border border-white/10 dark:border-white/10 flex items-center justify-center relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/2 to-transparent"></div>
-                    <div className="text-center space-y-3 relative z-10">
-                      <Brain className="w-8 h-8 text-gray-400 mx-auto" />
-                      <p className="text-gray-500 dark:text-gray-400 text-xs font-thin">
-                        Image placeholder - Add your visual here
-                      </p>
+                  {/* 3D Gradient Triangle */}
+                  <div className="flex-1 bg-black/50 rounded-2xl border border-white/10 flex items-center justify-center relative overflow-hidden p-8">
+                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent"></div>
+                    <div className="relative w-full h-full">
+                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40">
+                        <div className="absolute w-full h-full bg-gradient-to-r from-red-500 via-green-400 to-red-500 transform rotate-45 origin-center" 
+                             style={{ clipPath: "polygon(50% 0%, 100% 100%, 0% 100%)" }}>
+                        </div>
+                        <div className="absolute w-full h-full bg-black/50 transform rotate-45 translate-y-1 translate-x-1"
+                             style={{ clipPath: "polygon(50% 0%, 100% 100%, 0% 100%)" }}>
+                        </div>
+                      </div>
+                      <div className="absolute top-5 right-5 w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg transform rotate-12 animate-float"></div>
+                      <div className="absolute bottom-5 left-5 w-8 h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-lg transform -rotate-12 animate-float-delayed"></div>
                     </div>
                   </div>
                 </div>
@@ -233,20 +249,23 @@ export default function HomePage() {
                 {/* Glass card */}
                 <div className="relative bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-white/10 dark:border-white/10 rounded-3xl p-8 transition-all duration-500 group-hover:transform group-hover:-translate-y-2 group-hover:bg-white/8 dark:group-hover:bg-white/8 group-hover:border-white/20 min-h-[400px] flex flex-col">
                   <div className="mb-6">
-                    <h3 className="text-xl font-semibold mb-4 font-thin text-black dark:text-white">feels familiar</h3>
-                    <p className="text-gray-600 dark:text-gray-400 font-thin text-sm leading-relaxed">
+                    <h3 className="text-xl font-bold mb-4 text-black dark:text-white">feels familiar</h3>
+                    <p className="text-gray-600 dark:text-gray-400 font-medium text-sm leading-relaxed">
                       designed to work seamlessly with your existing workflow.
                     </p>
                   </div>
                   
-                  {/* Image placeholder space */}
-                  <div className="flex-1 bg-white/5 dark:bg-white/5 rounded-2xl border border-white/10 dark:border-white/10 flex items-center justify-center relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/2 to-transparent"></div>
-                    <div className="text-center space-y-3 relative z-10">
-                      <CreditCard className="w-8 h-8 text-gray-400 mx-auto" />
-                      <p className="text-gray-500 dark:text-gray-400 text-xs font-thin">
-                        Image placeholder - Add your visual here
-                      </p>
+                  {/* 3D Gradient Sphere */}
+                  <div className="flex-1 bg-black/50 rounded-2xl border border-white/10 flex items-center justify-center relative overflow-hidden p-8">
+                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent"></div>
+                    <div className="relative w-full h-full">
+                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                        <div className="w-32 h-32 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 blur-sm"></div>
+                        <div className="absolute inset-0 w-32 h-32 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-red-500"></div>
+                        <div className="absolute -inset-1 w-32 h-32 rounded-full bg-black/50 transform translate-y-0.5 translate-x-0.5"></div>
+                      </div>
+                      <div className="absolute top-8 right-8 w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 blur-sm animate-float"></div>
+                      <div className="absolute bottom-8 left-8 w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-blue-500 blur-sm animate-float-delayed"></div>
                     </div>
                   </div>
                 </div>
@@ -262,20 +281,22 @@ export default function HomePage() {
                 {/* Glass card */}
                 <div className="relative bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-white/10 dark:border-white/10 rounded-3xl p-8 transition-all duration-500 group-hover:transform group-hover:-translate-y-2 group-hover:bg-white/8 dark:group-hover:bg-white/8 group-hover:border-white/20 min-h-[400px] flex flex-col">
                   <div className="mb-6">
-                    <h3 className="text-xl font-semibold mb-4 font-thin text-black dark:text-white">direct orders</h3>
-                    <p className="text-gray-600 dark:text-gray-400 font-thin text-sm leading-relaxed">
+                    <h3 className="text-xl font-bold mb-4 text-black dark:text-white">direct orders</h3>
+                    <p className="text-gray-600 dark:text-gray-400 font-medium text-sm leading-relaxed">
                       connect and order directly from trusted distributors.
                     </p>
                   </div>
                   
-                  {/* Image placeholder space */}
-                  <div className="flex-1 bg-white/5 dark:bg-white/5 rounded-2xl border border-white/10 dark:border-white/10 flex items-center justify-center relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/2 to-transparent"></div>
-                    <div className="text-center space-y-3 relative z-10">
-                      <Truck className="w-8 h-8 text-gray-400 mx-auto" />
-                      <p className="text-gray-500 dark:text-gray-400 text-xs font-thin">
-                        Image placeholder - Add your visual here
-                      </p>
+                  {/* 3D Gradient Cubes */}
+                  <div className="flex-1 bg-black/50 rounded-2xl border border-white/10 flex items-center justify-center relative overflow-hidden p-8">
+                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent"></div>
+                    <div className="relative w-full h-full">
+                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                        <div className="w-32 h-32 bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 transform rotate-12 rounded-xl"></div>
+                        <div className="absolute inset-0 w-32 h-32 bg-black/50 transform rotate-12 translate-y-1 translate-x-1 rounded-xl"></div>
+                      </div>
+                      <div className="absolute top-10 right-10 w-16 h-16 bg-gradient-to-r from-red-500 to-yellow-500 transform -rotate-12 rounded-xl animate-float"></div>
+                      <div className="absolute bottom-10 left-10 w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-500 transform rotate-45 rounded-xl animate-float-delayed"></div>
                     </div>
                   </div>
                 </div>
@@ -287,19 +308,60 @@ export default function HomePage() {
 
       {/* Demo Placeholder Section */}
       <section className="py-20 px-4 bg-gray-50 dark:bg-[#111111]">
-        <div className="container mx-auto max-w-4xl text-center text-sm">
+        <div className="container mx-auto max-w-4xl text-center">
           <AnimateIn>
-            <h2 className="text-2xl md:text-3xl font-bold mb-8 font-thin md:font-normal">
+            <h2 className="text-2xl md:text-3xl font-bold mb-8 bg-gradient-to-r from-red-500 via-green-400 to-red-500 bg-clip-text text-transparent">
               see vendai in action
             </h2>
-            <div className="bg-white dark:bg-black rounded-lg shadow-xl p-8 border">
-              <div className="aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center">
-                <div className="text-center space-y-4 font-thin">
-                  <div className="w-14 h-14 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto">
-                    <Zap className="w-6 h-6 text-gray-500" />
+            <div className="bg-black/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/10 p-8">
+              <div className="aspect-video bg-black rounded-xl flex items-center justify-center relative overflow-hidden">
+                {/* Futuristic Frame */}
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-transparent to-green-400/20"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1)_0%,transparent_70%)]"></div>
+                
+                {/* Screen Content */}
+                <div className="relative w-full h-full p-8">
+                  {/* Top Bar */}
+                  <div className="flex items-center justify-between mb-8">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                      <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                      <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                    </div>
+                    <div className="text-white/50 text-sm font-medium">vendai terminal v1.0</div>
                   </div>
-                  <p className="text-gray-500 dark:text-gray-400">demo video placeholder</p>
+                  
+                  {/* Terminal Content */}
+                  <div className="text-left space-y-4">
+                    <div className="flex items-start gap-4">
+                      <span className="text-green-400 font-mono">$</span>
+                      <div className="flex-1">
+                        <p className="text-white font-mono mb-2">vendai analyze inventory</p>
+                        <div className="space-y-2 text-sm">
+                          <p className="text-purple-400 font-medium">→ Analyzing current stock levels...</p>
+                          <p className="text-green-400 font-medium">→ 15 items need restocking</p>
+                          <p className="text-blue-400 font-medium">→ Generating AI-powered insights</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start gap-4">
+                      <span className="text-green-400 font-mono">$</span>
+                      <div className="flex-1">
+                        <p className="text-white font-mono mb-2">vendai optimize orders</p>
+                        <div className="space-y-2 text-sm">
+                          <p className="text-yellow-400 font-medium">→ Calculating optimal order quantities</p>
+                          <p className="text-pink-400 font-medium">→ Finding best distributor prices</p>
+                          <div className="w-32 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 rounded-full mt-4"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+                
+                {/* Glowing Effects */}
+                <div className="absolute top-0 left-1/4 w-1/2 h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
+                <div className="absolute bottom-0 left-1/4 w-1/2 h-px bg-gradient-to-r from-transparent via-green-400 to-transparent"></div>
               </div>
             </div>
           </AnimateIn>
@@ -307,19 +369,68 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-800 bg-white dark:bg-[#111111] py-12 px-4 font-thin text-sm">
+      <footer className="border-t border-gray-800 bg-white dark:bg-[#111111] py-16 px-4 font-medium text-sm">
         <div className="container mx-auto max-w-6xl">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-3">
-              <img src="/vendai-icon.png" alt="vendai icon" className="h-5 w-5" />
-              <span className="font-bold">vendai</span>
+          <div className="grid md:grid-cols-5 gap-8 md:gap-12 mb-12">
+            {/* Brand Column */}
+            <div className="md:col-span-2">
+              <div className="flex items-center gap-3 mb-4">
+                <img src="/vendai-icon.png" alt="vendai icon" className="h-6 w-6" />
+                <span className="font-bold text-lg">vendai</span>
+              </div>
+              <p className="text-gray-600 dark:text-gray-400 max-w-xs">
+                AI-powered retail management platform helping businesses grow smarter.
+              </p>
+            </div>
+
+            {/* Product Column */}
+            <div>
+              <h3 className="font-bold mb-4 text-black dark:text-white">Product</h3>
+              <ul className="space-y-3">
+                <li><a href="/features" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">Features</a></li>
+                <li><a href="/pricing" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">Pricing</a></li>
+                <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">API</a></li>
+                <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">Documentation</a></li>
+              </ul>
+            </div>
+
+            {/* Company Column */}
+            <div>
+              <h3 className="font-bold mb-4 text-black dark:text-white">Company</h3>
+              <ul className="space-y-3">
+                <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">About</a></li>
+                <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">Blog</a></li>
+                <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">Careers</a></li>
+                <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">Contact</a></li>
+              </ul>
+            </div>
+
+            {/* Legal Column */}
+            <div>
+              <h3 className="font-bold mb-4 text-black dark:text-white">Legal</h3>
+              <ul className="space-y-3">
+                <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">Privacy</a></li>
+                <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">Terms</a></li>
+                <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">Security</a></li>
+                <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">Cookies</a></li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom Bar */}
+          <div className="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="text-gray-600 dark:text-gray-400">
+              © 2025 Vendai. All rights reserved.
             </div>
             <div className="flex items-center gap-6">
-              <a href="#" className="text-xs text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white font-thin">
-                privacy
+              <a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">
+                Twitter
               </a>
-              <a href="#" className="text-xs text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white font-thin">
-                terms
+              <a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">
+                LinkedIn
+              </a>
+              <a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">
+                GitHub
               </a>
             </div>
           </div>
