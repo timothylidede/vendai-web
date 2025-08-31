@@ -7,8 +7,14 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**', // allow all external CDNs
+      },
+    ],
+    formats: ['image/avif', 'image/webp'], // modern formats
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;
