@@ -8,7 +8,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "vendai - AI-Powered Retail Platform",
+  title: "vendai - The AI Retail Platform",
   description:
     "Transform your minimart with AI-powered inventory management, direct distributor connections, and smart business insights. Free for minimarts.",
   generator: "v0.app",
