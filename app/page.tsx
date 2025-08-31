@@ -85,7 +85,7 @@ export default function HomePage() {
         {/* Video Background */}
         <div className="absolute inset-0 bg-[#111111] rounded-lg md:rounded-2xl">
           <video
-            className="absolute inset-0 w-full h-full object-cover opacity-5 mix-blend-luminosity"
+            className="absolute inset-0 w-full h-full object-cover opacity-4 mix-blend-luminosity"
             autoPlay
             loop
             muted
