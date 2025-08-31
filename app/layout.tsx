@@ -8,14 +8,14 @@ import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "vendai - AI-Powered Retail Platform for Minimarts",
+  title: "vendai - AI-Powered Retail Platform",
   description:
     "Transform your minimart with AI-powered inventory management, direct distributor connections, and smart business insights. Free for minimarts.",
   generator: "v0.app",
   keywords: "AI retail, minimart management, inventory system, Kenya retail, distributor network",
   authors: [{ name: "vendai Team" }],
   icons: {
-    icon: "/vendai-icon.png",
+    icon: "/logo-icon.png",
   },
   openGraph: {
     title: "vendai - AI that runs the shop for you",
