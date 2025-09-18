@@ -63,6 +63,7 @@ export function Header() {
             <Button
               size="sm"
               className="text-base font-bold bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 flex items-center gap-2 h-10"
+              onClick={() => window.location.href = '/download'}
             >
               {os === "windows" && <img src="/microsoft.png" alt="Windows" className="w-5 h-5" />} 
               {os === "mac" && <img src="/apple.png" alt="Mac" className="w-5 h-5" />} 
