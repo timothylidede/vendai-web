@@ -14,6 +14,12 @@ export function Header() {
     }
   }, []);
 
+  const handleDownload = () => {
+    // Direct download for Windows exe file
+    const downloadUrl = "https://github.com/timothylidede/vendai-pos/releases/download/v1.0.0/VendAI-POS-v1.0.0-Windows-Setup.exe";
+    window.open(downloadUrl, '_blank');
+  };
+
   return (
     <>
       <header className="fixed z-50 bg-white dark:bg-[#111111] rounded-xl mt-4 mx-16 left-auto right-auto" style={{left: 0, right: 0}}>
@@ -25,45 +31,11 @@ export function Header() {
             </a>
           </div>
 
-          <nav className="hidden md:flex items-center gap-8">
-            <a
-              href="/features"
-              className="text-base font-bold text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
-            >
-              features.
-            </a>
-            <a
-              href="/pricing"
-              className="text-base font-bold text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
-            >
-              pricing.
-            </a>
-            <a
-              href="/retailers"
-              className="text-base font-bold text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
-            >
-              retailers.
-            </a>
-            <a
-              href="/distributors"
-              className="text-base font-bold text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
-            >
-              distributors.
-            </a>
-          </nav>
-
           <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-base font-bold text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white"
-            >
-              sign in.
-            </Button>
             <Button
               size="sm"
               className="text-base font-bold bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 flex items-center gap-2 h-10"
-              onClick={() => window.location.href = '/download'}
+              onClick={handleDownload}
             >
               {os === "windows" && <img src="/microsoft.png" alt="Windows" className="w-5 h-5" />} 
               {os === "mac" && <img src="/apple.png" alt="Mac" className="w-5 h-5" />} 

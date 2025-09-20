@@ -18,10 +18,17 @@ export default function HomePage() {
       else setOs("");
     }
   }, []);
+
+  const handleDownload = () => {
+    // Direct download for Windows exe file
+    const downloadUrl = "https://github.com/timothylidede/vendai-pos/releases/download/v1.0.0/VendAI-POS-v1.0.0-Windows-Setup.exe";
+    window.open(downloadUrl, '_blank');
+  };
+
   return (
-    <div className="min-h-screen bg-white dark:bg-[#111111] font-mono text-foreground">
+    <div className="min-h-screen bg-white dark:bg-[#111111] font-sans text-foreground">
       {/* Header */}
-  <header className="fixed z-50 bg-white dark:bg-[#111111] rounded-xl mt-4 mx-16 left-auto right-auto" style={{left: 0, right: 0}}>
+      <header className="fixed z-50 bg-white dark:bg-[#111111] rounded-xl mt-4 mx-16 left-auto right-auto" style={{left: 0, right: 0}}>
         <div className="container mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center">
             <a href="/" className="group flex items-center gap-1 p-2 outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-lg transition-all duration-300 hover:bg-[#111111]/10 dark:hover:bg-[#111111]/50 hover:scale-105">
@@ -30,45 +37,11 @@ export default function HomePage() {
             </a>
           </div>
 
-          <nav className="hidden md:flex items-center gap-8">
-            <a
-              href="/features"
-              className="text-base font-bold text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
-            >
-              features.
-            </a>
-            <a
-              href="/pricing"
-              className="text-base font-bold text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
-            >
-              pricing.
-            </a>
-            <a
-              href="/retailers"
-              className="text-base font-bold text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
-            >
-              retailers.
-            </a>
-            <a
-              href="/distributors"
-              className="text-base font-bold text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
-            >
-              distributors.
-            </a>
-          </nav>
-
           <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-base font-bold text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white"
-            >
-              sign in.
-            </Button>
             <Button
               size="sm"
               className="text-base font-bold bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 flex items-center gap-2 h-10"
-              onClick={() => window.location.href = '/download'}
+              onClick={handleDownload}
             >
               {os === "windows" && <img src="/microsoft.png" alt="Windows" className="w-5 h-5" />} 
               {os === "mac" && <img src="/apple.png" alt="Mac" className="w-5 h-5" />} 
@@ -104,7 +77,7 @@ export default function HomePage() {
         </div>
         <div className="container mx-auto max-w-3xl text-center text-white text-sm pt-20 relative z-10">
           <AnimateIn className="space-y-8">
-              <h1 className="hero-title text-5xl md:text-7xl lg:text-8xl leading-tight bg-gradient-to-r from-red-500 via-green-400 to-red-500 bg-clip-text text-transparent font-mono">
+              <h1 className="hero-title text-5xl md:text-7xl lg:text-8xl leading-tight bg-gradient-to-r from-red-500 via-green-400 to-red-500 bg-clip-text text-transparent font-sans">
                 <span className="font-black">AI</span>{' '}
                 <span className="inline-block font-black">
                   {useTypewriter(["pos.", "retail.", "erp."])}
@@ -115,7 +88,7 @@ export default function HomePage() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8 z-10">
-              <Button size="lg" className="bg-black text-white hover:bg-gray-800 text-base px-8 py-4 h-auto font-bold flex items-center gap-2">
+              <Button size="lg" className="bg-black text-white hover:bg-gray-800 text-base px-8 py-4 h-auto font-bold flex items-center gap-2" onClick={handleDownload}>
                 {os === "windows" && <img src="/white_microsoft.png" alt="Windows" className="w-6 h-6" />} 
                 {os === "mac" && <img src="/white_apple.png" alt="Mac" className="w-6 h-6" />} 
                 {os === "windows" && "download for windows."}
@@ -126,6 +99,7 @@ export default function HomePage() {
                   variant="outline"
                   size="lg"
                   className="border-white/30 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 text-base px-8 py-4 h-auto font-bold"
+                  onClick={() => window.location.href = '/download'}
                 >
                   all downloads.
                 </Button>
@@ -159,7 +133,7 @@ export default function HomePage() {
       {/* Trusted Brands Section */}
       <section className="bg-[#111111] py-12">
         <div className="container mx-auto max-w-5xl">
-          <h2 className="text-center font-bold text-white text-xl mt-30 mb-15 font-mono opacity-50">
+          <h2 className="text-center font-bold text-white text-xl mt-30 mb-15 font-sans opacity-50">
             trusted by leading consumer brands.
           </h2>
           <div className="flex flex-col space-y-10">
@@ -307,74 +281,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Demo Placeholder Section */}
-      <section className="py-20 px-4 bg-gray-50 dark:bg-[#111111]">
-        <div className="container mx-auto max-w-4xl text-center">
-          <AnimateIn>
-            <h2 className="text-2xl md:text-3xl font-bold mb-8 bg-gradient-to-r from-red-500 via-green-400 to-red-500 bg-clip-text text-transparent">
-              see vendai in action
-            </h2>
-            <div className="bg-black/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/10 p-8">
-              <div className="aspect-video bg-black rounded-xl flex items-center justify-center relative overflow-hidden">
-                {/* Futuristic Frame */}
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-transparent to-green-400/20"></div>
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1)_0%,transparent_70%)]"></div>
-                
-                {/* Screen Content */}
-                <div className="relative w-full h-full p-8">
-                  {/* Top Bar */}
-                  <div className="flex items-center justify-between mb-8">
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                      <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                      <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                    </div>
-                    <div className="text-white/50 text-sm font-medium">vendai terminal v1.0</div>
-                  </div>
-                  
-                  {/* Terminal Content */}
-                  <div className="text-left space-y-4">
-                    <div className="flex items-start gap-4">
-                      <span className="text-green-400 font-mono">$</span>
-                      <div className="flex-1">
-                        <p className="text-white font-mono mb-2">vendai analyze inventory</p>
-                        <div className="space-y-2 text-sm">
-                          <p className="text-purple-400 font-medium">→ Analyzing current stock levels...</p>
-                          <p className="text-green-400 font-medium">→ 15 items need restocking</p>
-                          <p className="text-blue-400 font-medium">→ Generating AI-powered insights</p>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start gap-4">
-                      <span className="text-green-400 font-mono">$</span>
-                      <div className="flex-1">
-                        <p className="text-white font-mono mb-2">vendai optimize orders</p>
-                        <div className="space-y-2 text-sm">
-                          <p className="text-yellow-400 font-medium">→ Calculating optimal order quantities</p>
-                          <p className="text-pink-400 font-medium">→ Finding best distributor prices</p>
-                          <div className="w-32 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 rounded-full mt-4"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Glowing Effects */}
-                <div className="absolute top-0 left-1/4 w-1/2 h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
-                <div className="absolute bottom-0 left-1/4 w-1/2 h-px bg-gradient-to-r from-transparent via-green-400 to-transparent"></div>
-              </div>
-            </div>
-          </AnimateIn>
-        </div>
-      </section>
-
       {/* Footer */}
       <footer className="border-t border-gray-800 bg-white dark:bg-[#111111] py-16 px-4 font-medium text-sm">
         <div className="container mx-auto max-w-6xl">
-          <div className="grid md:grid-cols-5 gap-8 md:gap-12 mb-12">
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
             {/* Brand Column */}
-            <div className="md:col-span-2">
+            <div>
               <div className="flex items-center gap-3 mb-4">
                 <img src="/vendai-icon.png" alt="vendai icon" className="h-6 w-6" />
                 <span className="font-bold text-lg">vendai</span>
@@ -384,36 +296,12 @@ export default function HomePage() {
               </p>
             </div>
 
-            {/* Product Column */}
+            {/* Contact Column */}
             <div>
-              <h3 className="font-bold mb-4 text-black dark:text-white">Product</h3>
+              <h3 className="font-bold mb-4 text-black dark:text-white">Contact Us</h3>
               <ul className="space-y-3">
-                <li><a href="/features" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">Features</a></li>
-                <li><a href="/pricing" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">Pricing</a></li>
-                <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">API</a></li>
-                <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">Documentation</a></li>
-              </ul>
-            </div>
-
-            {/* Company Column */}
-            <div>
-              <h3 className="font-bold mb-4 text-black dark:text-white">Company</h3>
-              <ul className="space-y-3">
-                <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">About</a></li>
-                <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">Blog</a></li>
-                <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">Careers</a></li>
-                <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">Contact</a></li>
-              </ul>
-            </div>
-
-            {/* Legal Column */}
-            <div>
-              <h3 className="font-bold mb-4 text-black dark:text-white">Legal</h3>
-              <ul className="space-y-3">
-                <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">Privacy</a></li>
-                <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">Terms</a></li>
-                <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">Security</a></li>
-                <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">Cookies</a></li>
+                <li><a href="mailto:hello@vendai.digital" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">hello@vendai.digital</a></li>
+                <li><a href="mailto:support@vendai.digital" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">support@vendai.digital</a></li>
               </ul>
             </div>
           </div>
@@ -424,14 +312,11 @@ export default function HomePage() {
               © 2025 Vendai. All rights reserved.
             </div>
             <div className="flex items-center gap-6">
-              <a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">
+              <a href="https://x.com/vendai.digital" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">
                 Twitter
               </a>
-              <a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">
+              <a href="https://linkedin.com/company/vendai" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">
                 LinkedIn
-              </a>
-              <a href="#" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">
-                GitHub
               </a>
             </div>
           </div>
