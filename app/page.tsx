@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useTypewriter } from "@/hooks/use-typewriter"
 
 import { Button } from "@/components/ui/button"
@@ -19,23 +19,53 @@ export default function HomePage() {
     }
   }, []);
 
+  // Performance: lazy-load hero video only when in view and respect reduced motion
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const heroRef = useRef<HTMLElement | null>(null);
+  const [videoSrc, setVideoSrc] = useState<string>("");
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setPrefersReducedMotion(mq.matches);
+    update();
+    mq.addEventListener?.("change", update);
+    return () => mq.removeEventListener?.("change", update);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !heroRef.current) return;
+    if (prefersReducedMotion) return; // don't auto-play/load video if user prefers reduced motion
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting) {
+          // Defer setting src until in view
+          if (!videoSrc) setVideoSrc("/videos/50s.mp4");
+          // Try to play when ready
+          if (videoRef.current) {
+            videoRef.current.playbackRate = 0.5;
+            const p = videoRef.current.play?.();
+            if (p && typeof p.then === "function") {
+              p.catch(() => {/* autoplay might be blocked; ignore */});
+            }
+          }
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.25 }
+    );
+
+    observer.observe(heroRef.current);
+    return () => observer.disconnect();
+  }, [prefersReducedMotion, videoSrc]);
+
   const handleDownload = () => {
-    const downloadUrl = "https://github.com/timothylidede/vendai-pos/releases/latest/download/VendAI-POS-Windows-Setup.exe";
-    
-    // Try direct download first
-    try {
-      const link = document.createElement('a');
-      link.href = downloadUrl;
-      link.download = 'VendAI-POS-Windows-Setup.exe';
-      link.target = '_blank'; // Open in new tab to avoid navigation issues
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error('Download failed:', error);
-      // Fallback: open releases page
-      window.open('https://github.com/timothylidede/vendai-pos/releases/latest', '_blank');
-    }
+    // Use direct navigation to leverage browser download manager, resume, and retries
+    window.location.href =
+      "https://github.com/timothylidede/vendai-pos/releases/latest/download/VendAI-POS-Windows-Setup.exe";
   };
 
   return (
@@ -68,24 +98,22 @@ export default function HomePage() {
       <div className="h-26"></div>
 
       {/* Hero Section */}
-      <section className="relative min-h-[calc(100vh-5rem)] flex flex-col px-2 md:px-6 rounded-lg md:rounded-2xl mx-6 md:mx-12 overflow-hidden" style={{zIndex:1}}>
+      <section ref={heroRef} className="relative min-h-[calc(100vh-5rem)] flex flex-col px-2 md:px-6 rounded-lg md:rounded-2xl mx-6 md:mx-12 overflow-hidden" style={{zIndex:1}}>
         {/* Video Background */}
         <div className="absolute inset-0 bg-[#111111] rounded-lg md:rounded-2xl">
           <video
+            ref={videoRef}
             className="absolute inset-0 w-full h-full object-cover opacity-4 mix-blend-luminosity"
-            autoPlay
+            autoPlay={!prefersReducedMotion}
             loop
             muted
             playsInline
+            preload="none"
+            poster="/placeholder.jpg"
+            src={videoSrc || undefined}
+            aria-hidden="true"
             style={{ transform: 'scale(1.01)' }}
-            ref={(el) => {
-              if (el) {
-                el.playbackRate = 0.5;
-              }
-            }}
-          >
-            <source src="/videos/50s.mp4" type="video/mp4" />
-          </video>
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-[#111111] via-transparent to-transparent opacity-80"></div>
         </div>
         <div className="container mx-auto max-w-3xl text-center text-white text-sm pt-20 relative z-10">

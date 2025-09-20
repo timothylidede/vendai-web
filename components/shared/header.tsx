@@ -15,22 +15,9 @@ export function Header() {
   }, []);
 
   const handleDownload = () => {
-    const downloadUrl = "https://github.com/timothylidede/vendai-pos/releases/latest/download/VendAI-POS-Windows-Setup.exe";
-    
-    // Try direct download first
-    try {
-      const link = document.createElement('a');
-      link.href = downloadUrl;
-      link.download = 'VendAI-POS-Windows-Setup.exe';
-      link.target = '_blank'; // Open in new tab to avoid navigation issues
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error('Download failed:', error);
-      // Fallback: open releases page
-      window.open('https://github.com/timothylidede/vendai-pos/releases/latest', '_blank');
-    }
+    // Use direct navigation to leverage browser download manager, resume, and retries
+    window.location.href =
+      "https://github.com/timothylidede/vendai-pos/releases/latest/download/VendAI-POS-Windows-Setup.exe";
   };
 
   return (
