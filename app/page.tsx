@@ -20,16 +20,22 @@ export default function HomePage() {
   }, []);
 
   const handleDownload = () => {
-    // Direct download for Windows exe file from GitHub releases
     const downloadUrl = "https://github.com/timothylidede/vendai-pos/releases/latest/download/VendAI-POS-Windows-Setup.exe";
     
-    // Create download link and trigger immediately
-    const link = document.createElement('a');
-    link.href = downloadUrl;
-    link.download = 'VendAI-POS-Windows-Setup.exe';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Try direct download first
+    try {
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = 'VendAI-POS-Windows-Setup.exe';
+      link.target = '_blank'; // Open in new tab to avoid navigation issues
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Download failed:', error);
+      // Fallback: open releases page
+      window.open('https://github.com/timothylidede/vendai-pos/releases/latest', '_blank');
+    }
   };
 
   return (
@@ -106,10 +112,22 @@ export default function HomePage() {
                   variant="outline"
                   size="lg"
                   className="border-white/30 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 text-base px-8 py-4 h-auto font-bold"
-                  onClick={() => window.location.href = '/download'}
+                  onClick={() => window.open('https://github.com/timothylidede/vendai-pos/releases/latest', '_blank')}
                 >
-                  all downloads.
+                  releases page.
                 </Button>
+            </div>
+            
+            {/* Fallback download link */}
+            <div className="text-center pt-4">
+              <p className="text-white/60 text-sm mb-2">Download not working?</p>
+              <a 
+                href="https://github.com/timothylidede/vendai-pos/releases/latest/download/VendAI-POS-Windows-Setup.exe"
+                download="VendAI-POS-Windows-Setup.exe"
+                className="text-white/80 hover:text-white underline text-sm"
+              >
+                Try direct link
+              </a>
             </div>
           </AnimateIn>
         </div>
