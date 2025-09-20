@@ -20,9 +20,16 @@ export default function HomePage() {
   }, []);
 
   const handleDownload = () => {
-    // Direct download for Windows exe file
-    const downloadUrl = "https://github.com/timothylidede/vendai-pos/releases/download/v1.0.0/VendAI-POS-v1.0.0-Windows-Setup.exe";
-    window.open(downloadUrl, '_blank');
+    // Direct download for Windows exe file from GitHub releases
+    const downloadUrl = "https://github.com/timothylidede/vendai-pos/releases/latest/download/VendAI-POS-Windows-Setup.exe";
+    
+    // Create download link and trigger immediately
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = 'VendAI-POS-Windows-Setup.exe';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -301,7 +308,6 @@ export default function HomePage() {
               <h3 className="font-bold mb-4 text-black dark:text-white">Contact Us</h3>
               <ul className="space-y-3">
                 <li><a href="mailto:hello@vendai.digital" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">hello@vendai.digital</a></li>
-                <li><a href="mailto:support@vendai.digital" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">support@vendai.digital</a></li>
               </ul>
             </div>
           </div>

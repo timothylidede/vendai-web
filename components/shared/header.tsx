@@ -15,9 +15,16 @@ export function Header() {
   }, []);
 
   const handleDownload = () => {
-    // Direct download for Windows exe file
-    const downloadUrl = "https://github.com/timothylidede/vendai-pos/releases/download/v1.0.0/VendAI-POS-v1.0.0-Windows-Setup.exe";
-    window.open(downloadUrl, '_blank');
+    // Direct download for Windows exe file from GitHub releases
+    const downloadUrl = "https://github.com/timothylidede/vendai-pos/releases/latest/download/VendAI-POS-Windows-Setup.exe";
+    
+    // Create download link and trigger immediately
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = 'VendAI-POS-Windows-Setup.exe';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (

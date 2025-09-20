@@ -60,9 +60,9 @@ const fallbackReleaseData: ReleaseData = {
     total: 1234,
     windows: [
       {
-        name: "VendAI-POS-v1.0.0-Windows-Setup.exe",
-        url: "https://github.com/timothylidede/vendai-pos/releases/download/v1.0.0/VendAI-POS-v1.0.0-Windows-Setup.exe",
-        size: 87654321, // ~87.7 MB
+        name: "VendAI-POS-Windows-Setup.exe",
+        url: "https://github.com/timothylidede/vendai-pos/releases/latest/download/VendAI-POS-Windows-Setup.exe",
+        size: 200000000, // ~200 MB
         platform: "windows",
         type: "installer",
         downloads: 567
