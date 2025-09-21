@@ -69,7 +69,8 @@ export default function HomePage() {
         "If you see a Google confirmation, click 'Download anyway'. On Windows, you may need More info → Run anyway.",
     })
     // Direct navigation for reliability (browser download manager)
-    window.location.href = '/api/download/win';
+    const ts = Date.now()
+    window.location.href = `/api/download/win?_=${ts}`;
   };
 
   return (

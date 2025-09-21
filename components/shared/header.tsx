@@ -10,7 +10,8 @@ export function Header() {
         "If prompted, click 'Download anyway'. On Windows SmartScreen, use More info → Run anyway.",
     })
     // Use direct navigation to leverage browser download manager, resume, and retries
-    window.location.href = '/api/download/win';
+    const ts = Date.now()
+    window.location.href = `/api/download/win?_=${ts}`;
   };
 
   return (
