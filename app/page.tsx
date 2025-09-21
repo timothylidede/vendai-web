@@ -8,14 +8,12 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { Brain, Truck, CreditCard, Zap } from "lucide-react"
 
 export default function HomePage() {
-  // OS detection for download button
-  const [os, setOs] = useState<string>("");
+  // Windows-only branding for download CTA
+  const [isWindows, setIsWindows] = useState<boolean>(false);
   useEffect(() => {
     if (typeof window !== "undefined") {
       const platform = window.navigator.platform.toLowerCase();
-      if (platform.includes("win")) setOs("windows");
-      else if (platform.includes("mac")) setOs("mac");
-      else setOs("");
+      setIsWindows(platform.includes("win"));
     }
   }, []);
 
@@ -63,7 +61,7 @@ export default function HomePage() {
   }, [prefersReducedMotion, videoSrc]);
 
   const handleDownload = () => {
-    // Use direct navigation to leverage browser download manager, resume, and retries
+    // Direct navigation for reliability (browser download manager)
     window.location.href =
       "https://github.com/timothylidede/vendai-pos/releases/latest/download/VendAI-POS-Windows-Setup.exe";
   };
@@ -86,8 +84,7 @@ export default function HomePage() {
               className="text-base font-bold bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 flex items-center gap-2 h-10"
               onClick={handleDownload}
             >
-              {os === "windows" && <img src="/microsoft.png" alt="Windows" className="w-5 h-5" />} 
-              {os === "mac" && <img src="/apple.png" alt="Mac" className="w-5 h-5" />} 
+              <img src="/microsoft.png" alt="Windows" className="w-5 h-5" />
               download.
             </Button>
           </div>
@@ -130,33 +127,25 @@ export default function HomePage() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8 z-10">
               <Button size="lg" className="bg-black text-white hover:bg-gray-800 text-base px-8 py-4 h-auto font-bold flex items-center gap-2" onClick={handleDownload}>
-                {os === "windows" && <img src="/white_microsoft.png" alt="Windows" className="w-6 h-6" />} 
-                {os === "mac" && <img src="/white_apple.png" alt="Mac" className="w-6 h-6" />} 
-                {os === "windows" && "download for windows."}
-                {os === "mac" && "download for mac."}
-                {!os && "download."}
+                <img src="/white_microsoft.png" alt="Windows" className="w-6 h-6" />
+                {isWindows ? "download for windows." : "download."}
               </Button>
               <Button
                   variant="outline"
                   size="lg"
                   className="border-white/30 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 text-base px-8 py-4 h-auto font-bold"
-                  onClick={() => window.open('https://github.com/timothylidede/vendai-pos/releases/latest', '_blank')}
+                  onClick={() => { window.location.href = '/download' }}
                 >
-                  releases page.
+                  all downloads.
                 </Button>
             </div>
             
-            {/* Fallback download link */}
-            <div className="text-center pt-4">
-              <p className="text-white/60 text-sm mb-2">Download not working?</p>
-              <a 
-                href="https://github.com/timothylidede/vendai-pos/releases/latest/download/VendAI-POS-Windows-Setup.exe"
-                download="VendAI-POS-Windows-Setup.exe"
-                className="text-white/80 hover:text-white underline text-sm"
-              >
-                Try direct link
-              </a>
-            </div>
+            {/* Subtle fallback hint for blocked .exe */}
+            {isWindows && (
+              <div className="text-center pt-4">
+                <p className="text-white/60 text-sm">Having trouble downloading? Try the ZIP on the <a className="underline" href="/download">downloads page</a>.</p>
+              </div>
+            )}
           </AnimateIn>
         </div>
 
@@ -334,7 +323,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
+  {/* Footer */}
       <footer className="border-t border-gray-800 bg-white dark:bg-[#111111] py-16 px-4 font-medium text-sm">
         <div className="container mx-auto max-w-6xl">
           <div className="grid md:grid-cols-2 gap-8 mb-12">
