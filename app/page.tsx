@@ -62,8 +62,7 @@ export default function HomePage() {
 
   const handleDownload = () => {
     // Direct navigation for reliability (browser download manager)
-    window.location.href =
-      "https://github.com/timothylidede/vendai-pos/releases/latest/download/VendAI-POS-Windows-Setup.exe";
+    window.location.href = '/api/download/win';
   };
 
   return (
