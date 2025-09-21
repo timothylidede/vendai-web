@@ -1,23 +1,16 @@
 "use client"
-import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
+import { toast } from "@/hooks/use-toast"
 
 export function Header() {
-  // OS detection for download button
-  const [os, setOs] = useState<string>("");
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const platform = window.navigator.platform.toLowerCase();
-      if (platform.includes("win")) setOs("windows");
-      else if (platform.includes("mac")) setOs("mac");
-      else setOs("");
-    }
-  }, []);
-
   const handleDownload = () => {
+    toast({
+      title: "Starting download…",
+      description:
+        "If prompted, click 'Download anyway'. On Windows SmartScreen, use More info → Run anyway.",
+    })
     // Use direct navigation to leverage browser download manager, resume, and retries
-    window.location.href =
-      "https://github.com/timothylidede/vendai-pos/releases/latest/download/VendAI-POS-Windows-Setup.exe";
+    window.location.href = '/api/download/win';
   };
 
   return (
@@ -37,8 +30,7 @@ export function Header() {
               className="text-base font-bold bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 flex items-center gap-2 h-10"
               onClick={handleDownload}
             >
-              {os === "windows" && <img src="/microsoft.png" alt="Windows" className="w-5 h-5" />} 
-              {os === "mac" && <img src="/apple.png" alt="Mac" className="w-5 h-5" />} 
+              <img src="/microsoft.png" alt="Windows" className="w-5 h-5" />
               download.
             </Button>
           </div>

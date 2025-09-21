@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { useTypewriter } from "@/hooks/use-typewriter"
 
 import { Button } from "@/components/ui/button"
+import { toast } from "@/hooks/use-toast"
 import { AnimateIn } from "@/components/ui/animate"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Brain, Truck, CreditCard, Zap } from "lucide-react"
@@ -61,6 +62,12 @@ export default function HomePage() {
   }, [prefersReducedMotion, videoSrc]);
 
   const handleDownload = () => {
+    // Friendly hint about Google Drive's confirmation and SmartScreen
+    toast({
+      title: "Starting download…",
+      description:
+        "If you see a Google confirmation, click 'Download anyway'. On Windows, you may need More info → Run anyway.",
+    })
     // Direct navigation for reliability (browser download manager)
     window.location.href = '/api/download/win';
   };
