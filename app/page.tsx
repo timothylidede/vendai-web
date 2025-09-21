@@ -66,7 +66,7 @@ export default function HomePage() {
     toast({
       title: "Starting download…",
       description:
-        "If you see a Google confirmation, click 'Download anyway'. On Windows, you may need More info → Run anyway.",
+        "If your browser asks for confirmation, proceed to download. On Windows, you may need More info → Run anyway.",
     })
     // Direct navigation for reliability (browser download manager)
     const ts = Date.now()

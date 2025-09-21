@@ -7,7 +7,7 @@ export function Header() {
     toast({
       title: "Starting download…",
       description:
-        "If prompted, click 'Download anyway'. On Windows SmartScreen, use More info → Run anyway.",
+        "If your browser asks for confirmation, proceed to download. On Windows SmartScreen, use More info → Run anyway.",
     })
     // Use direct navigation to leverage browser download manager, resume, and retries
     const ts = Date.now()

@@ -12,7 +12,7 @@ export default function DownloadPage() {
             href={winUrl}
           >
             <div className="text-lg font-semibold">🪟 Download for Windows (EXE)</div>
-            <div className="text-xs opacity-80 mt-2">If your browser or network blocks .exe files, click anyway; Google may show a confirmation (Download anyway).</div>
+            <div className="text-xs opacity-80 mt-2">If your browser or network asks for confirmation, proceed to download.</div>
           </a>
 
           <a
@@ -27,7 +27,7 @@ export default function DownloadPage() {
         <div className="mt-10 rounded-xl border border-gray-200/30 p-6 bg-gray-50 dark:bg-white/5">
           <h2 className="text-xl font-semibold">Installation steps (Windows)</h2>
           <ol className="mt-3 list-decimal pl-5 space-y-2 text-sm">
-            <li>Click Download. If Google shows a warning, choose Download anyway.</li>
+            <li>Click Download. If your browser shows a warning, confirm to continue.</li>
             <li>Double‑click the installer.</li>
             <li>If you see "Windows protected your PC", click More info → Run anyway.</li>
             <li>Finish the wizard. Shortcuts are created in Start menu and optionally Desktop.</li>
