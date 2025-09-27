@@ -133,26 +133,28 @@ export default function HomePage() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8 z-10">
+              <Button 
+                size="lg" 
+                className="bg-gradient-to-r from-red-500 via-green-400 to-red-500 text-white hover:opacity-90 text-base px-8 py-4 h-auto font-bold"
+                onClick={() => window.location.href = 'https://app.vendai.digital'}
+              >
+                sign in to web app.
+              </Button>
               <Button size="lg" className="bg-black text-white hover:bg-gray-800 text-base px-8 py-4 h-auto font-bold flex items-center gap-2" onClick={handleDownload}>
                 <img src="/white_microsoft.png" alt="Windows" className="w-6 h-6" />
-                {isWindows ? "download for windows." : "download."}
+                {isWindows ? "download desktop app." : "download desktop."}
               </Button>
-              <Button
-                  variant="outline"
-                  size="lg"
-                  className="border-white/30 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 text-base px-8 py-4 h-auto font-bold"
-                  onClick={() => { window.location.href = '/download' }}
-                >
-                  all downloads.
-                </Button>
             </div>
             
-            {/* Subtle fallback hint for blocked .exe */}
-            {isWindows && (
-              <div className="text-center pt-4">
-                <p className="text-white/60 text-sm">Having trouble downloading? Try the ZIP on the <a className="underline" href="/download">downloads page</a>.</p>
-              </div>
-            )}
+            {/* Choice explanation */}
+            <div className="text-center pt-6">
+              <p className="text-white/60 text-sm max-w-2xl mx-auto">
+                <strong className="text-white/80">Choose your experience:</strong> Start immediately in your browser with the web app, or download the desktop version for offline access and native OS integration.
+              </p>
+              <p className="text-white/50 text-xs mt-2">
+                Need help? Visit the <a className="underline hover:text-white/70" href="/download">downloads page</a> for installation guides.
+              </p>
+            </div>
           </AnimateIn>
         </div>
 

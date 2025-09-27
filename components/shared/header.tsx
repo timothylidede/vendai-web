@@ -27,6 +27,14 @@ export function Header() {
 
           <div className="flex items-center gap-3">
             <Button
+              variant="outline"
+              size="sm"
+              className="text-base font-medium border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 h-10"
+              onClick={() => window.location.href = 'https://app.vendai.digital'}
+            >
+              sign in.
+            </Button>
+            <Button
               size="sm"
               className="text-base font-bold bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 flex items-center gap-2 h-10"
               onClick={handleDownload}
