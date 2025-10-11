@@ -16,36 +16,37 @@ export function Header() {
 
   return (
     <>
-      <header className="fixed z-50 bg-white dark:bg-[#111111] rounded-xl mt-4 mx-16 left-auto right-auto" style={{left: 0, right: 0}}>
-        <div className="container mx-auto px-6 h-16 flex items-center justify-between">
+      <header className="fixed z-50 bg-white dark:bg-[#111111] rounded-xl mt-2 md:mt-4 mx-2 md:mx-8 lg:mx-16 left-0 right-0">
+        <div className="container mx-auto px-3 md:px-6 h-14 md:h-16 flex items-center justify-between">
           <div className="flex items-center">
-            <a href="/" className="group flex items-center gap-1 p-2 outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-lg transition-all duration-300 hover:bg-[#111111]/10 dark:hover:bg-[#111111]/50 hover:scale-105">
-              <img src="/logo-icon.png" alt="vendai icon" className="h-8 w-8 transition-all duration-700 group-hover:animate-[spin_2s_linear_infinite]" tabIndex={0} />
-              <img src="/logo-text.png" alt="vendai" className="h-7 select-text cursor-pointer transition-all duration-300 group-hover:brightness-125" tabIndex={0} />
+            <a href="/" className="group flex items-center gap-0.5 md:gap-1 p-1 md:p-2 outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-lg transition-all duration-300 hover:bg-[#111111]/10 dark:hover:bg-[#111111]/50 hover:scale-105">
+              <img src="/logo-icon.png" alt="vendai icon" className="h-6 w-6 md:h-8 md:w-8 transition-all duration-700 group-hover:animate-[spin_2s_linear_infinite]" tabIndex={0} />
+              <img src="/logo-text.png" alt="vendai" className="h-5 md:h-7 select-text cursor-pointer transition-all duration-300 group-hover:brightness-125" tabIndex={0} />
             </a>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 md:gap-3">
             <Button
               variant="outline"
               size="sm"
-              className="text-base font-medium border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 h-10"
+              className="text-xs md:text-base font-medium border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 h-8 md:h-10 px-2 md:px-4"
               onClick={() => window.location.href = 'https://app.vendai.digital'}
             >
               sign in.
             </Button>
             <Button
               size="sm"
-              className="text-base font-bold bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 flex items-center gap-2 h-10"
+              className="text-xs md:text-base font-bold bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 flex items-center gap-1 md:gap-2 h-8 md:h-10 px-2 md:px-4"
               onClick={handleDownload}
             >
-              <img src="/microsoft.png" alt="Windows" className="w-5 h-5" />
-              download.
+              <img src="/microsoft.png" alt="Windows" className="w-4 h-4 md:w-5 md:h-5" />
+              <span className="hidden sm:inline">download.</span>
+              <span className="sm:hidden">get</span>
             </Button>
           </div>
         </div>
       </header>
-      <div className="h-26"></div>
+      <div className="h-16 md:h-20"></div>
     </>
   )
 }
