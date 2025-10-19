@@ -21,7 +21,9 @@ yarn-error.log*
 
 # generated media
 public/generated/
-public/image-gen/
+# keep generated exports out except curated assets; track public/image-gen so production can serve them
+public/image-gen/outputs/
+public/image-gen/tmp/
 
 # vercel
 .vercel
