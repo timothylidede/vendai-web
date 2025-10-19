@@ -38,100 +38,105 @@
 /* -------------------- Colors -------------------- */
 /* Updated monochromatic grayscale palette */
 :root {
-  --background: #ffffff;
-  --foreground: #000000;
-  --card: #ffffff;
-  --card-foreground: #000000;
-  --popover: #ffffff;
-  --popover-foreground: #000000;
-  --primary: #000000;
-  --primary-foreground: #ffffff;
-  --secondary: #e6e6e6;
-  --secondary-foreground: #000000;
-  --muted: #e6e6e6;
-  --muted-foreground: #333333;
-  --accent: #cccccc;
-  --accent-foreground: #000000;
-  --destructive: #000000;
-  --destructive-foreground: #ffffff;
-  --border: #cccccc;
-  --input: #ffffff;
-  --ring: #000000;
-  --chart-1: #000000;
-  --chart-2: #333333;
-  --chart-3: #1a1a1a;
-  --chart-4: #cccccc;
-  --chart-5: #e6e6e6;
+  --background: oklch(0.18 0.04 245);
+  --foreground: rgba(248, 250, 252, 0.92);
+  --card: oklch(0.24 0.05 245);
+  --card-foreground: rgba(255, 255, 255, 0.92);
+  --popover: oklch(0.24 0.05 245 / 0.9);
+  --popover-foreground: rgba(248, 250, 252, 0.92);
+  --primary: rgba(248, 250, 252, 0.95);
+  --primary-foreground: rgba(12, 20, 34, 0.98);
+  --secondary: oklch(0.24 0.05 245);
+  --secondary-foreground: rgba(248, 250, 252, 0.9);
+  --muted: oklch(0.24 0.05 245);
+  --muted-foreground: oklch(0.76 0.05 235);
+  --accent: oklch(0.26 0.06 235);
+  --accent-foreground: rgba(248, 250, 252, 0.96);
+  --destructive: rgba(248, 250, 252, 0.95);
+  --destructive-foreground: rgba(15, 23, 42, 1);
+  --border: oklch(0.32 0.04 245 / 0.14);
+  --input: oklch(0.28 0.04 245 / 0.4);
+  --ring: rgba(125, 211, 252, 0.35);
+  --chart-1: rgba(56, 189, 248, 0.6);
+  --chart-2: rgba(14, 165, 233, 0.5);
+  --chart-3: rgba(129, 140, 248, 0.45);
+  --chart-4: rgba(59, 130, 246, 0.35);
+  --chart-5: rgba(20, 184, 166, 0.35);
   --radius: 0.5rem;
-  --sidebar: #ffffff;
-  --sidebar-foreground: #000000;
-  --sidebar-primary: #000000;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #cccccc;
-  --sidebar-accent-foreground: #000000;
-  --sidebar-border: #cccccc;
-  --sidebar-ring: #000000;
+  --sidebar: transparent;
+  --sidebar-foreground: rgba(248, 250, 252, 0.92);
+  --sidebar-primary: rgba(56, 189, 248, 0.9);
+  --sidebar-primary-foreground: rgba(6, 12, 23, 0.98);
+  --sidebar-accent: rgba(14, 116, 144, 0.6);
+  --sidebar-accent-foreground: rgba(241, 245, 249, 0.92);
+  --sidebar-border: oklch(0.32 0.04 245 / 0.14);
+  --sidebar-ring: rgba(59, 130, 246, 0.4);
 }
 
 .dark {
-  --background: #000000;
-  --foreground: #ffffff;
-  --card: #1a1a1a;
-  --card-foreground: #ffffff;
-  --popover: #1a1a1a;
-  --popover-foreground: #ffffff;
-  --primary: #ffffff;
-  --primary-foreground: #000000;
-  --secondary: #333333;
-  --secondary-foreground: #ffffff;
-  --muted: #333333;
-  --muted-foreground: #cccccc;
-  --accent: #1a1a1a;
-  --accent-foreground: #ffffff;
-  --destructive: #ffffff;
-  --destructive-foreground: #000000;
-  --border: #333333;
-  --input: #1a1a1a;
-  --ring: #ffffff;
-  --chart-1: #ffffff;
-  --chart-2: #cccccc;
-  --chart-3: #e6e6e6;
-  --chart-4: #333333;
-  --chart-5: #1a1a1a;
-  --sidebar: #000000;
-  --sidebar-foreground: #ffffff;
-  --sidebar-primary: #ffffff;
-  --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #1a1a1a;
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #333333;
-  --sidebar-ring: #ffffff;
+  --background: oklch(0.18 0.04 245);
+  --foreground: rgba(248, 250, 252, 0.92);
+  --card: oklch(0.24 0.05 245);
+  --card-foreground: rgba(255, 255, 255, 0.92);
+  --popover: oklch(0.24 0.05 245 / 0.9);
+  --popover-foreground: rgba(248, 250, 252, 0.92);
+  --primary: rgba(248, 250, 252, 0.95);
+  --primary-foreground: rgba(12, 20, 34, 0.98);
+  --secondary: oklch(0.24 0.05 245);
+  --secondary-foreground: rgba(248, 250, 252, 0.9);
+  --muted: oklch(0.24 0.05 245);
+  --muted-foreground: oklch(0.76 0.05 235);
+  --accent: oklch(0.26 0.06 235);
+  --accent-foreground: rgba(248, 250, 252, 0.96);
+  --destructive: rgba(248, 250, 252, 0.95);
+  --destructive-foreground: rgba(15, 23, 42, 1);
+  --border: oklch(0.32 0.04 245 / 0.14);
+  --input: oklch(0.28 0.04 245 / 0.4);
+  --ring: rgba(125, 211, 252, 0.35);
+  --chart-1: rgba(56, 189, 248, 0.6);
+  --chart-2: rgba(14, 165, 233, 0.5);
+  --chart-3: rgba(129, 140, 248, 0.45);
+  --chart-4: rgba(59, 130, 246, 0.35);
+  --chart-5: rgba(20, 184, 166, 0.35);
+  --sidebar: transparent;
+  --sidebar-foreground: rgba(248, 250, 252, 0.92);
+  --sidebar-primary: rgba(56, 189, 248, 0.9);
+  --sidebar-primary-foreground: rgba(6, 12, 23, 0.98);
+  --sidebar-accent: rgba(14, 116, 144, 0.6);
+  --sidebar-accent-foreground: rgba(241, 245, 249, 0.92);
+  --sidebar-border: oklch(0.32 0.04 245 / 0.14);
+  --sidebar-ring: rgba(59, 130, 246, 0.4);
 }
 
 /* -------------------- Fonts -------------------- */
-/* Century Gothic Thin, Regular, Bold */
+/* Neue Haas Grotesk Display Pro (Studio Chen stack) */
 @font-face {
-  font-family: "Century Gothic";
-  src: url("/fonts/CenturyGothic-Thin.woff2") format("woff2"),
-       url("/fonts/CenturyGothic-Thin.woff") format("woff");
-  font-weight: 100;
+  font-family: "Neue Haas Grotesk Display Pro";
+  src: url("/fonts/Neue Haas Grotesk Display Pro 35 Extra Light.woff2") format("woff2");
+  font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Century Gothic";
-  src: url("/fonts/CenturyGothic-Regular.woff2") format("woff2"),
-       url("/fonts/CenturyGothic-Regular.woff") format("woff");
+  font-family: "Neue Haas Grotesk Display Pro";
+  src: url("/fonts/Neue Haas Grotesk Display Pro 55 Roman.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Century Gothic";
-  src: url("/fonts/CenturyGothic-Bold.woff2") format("woff2"),
-       url("/fonts/CenturyGothic-Bold.woff") format("woff");
+  font-family: "Neue Haas Grotesk Display Pro";
+  src: url("/fonts/Neue Haas Grotesk Display Pro 65 Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Haas Grotesk Display Pro";
+  src: url("/fonts/Neue Haas Grotesk Display Pro 75 Bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -139,8 +144,8 @@
 
 /* -------------------- Theme Variables -------------------- */
 @theme inline {
-  --font-sans: "Century Gothic", var(--font-geist-sans), system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono);
+  --font-sans: "Neue Haas Grotesk Display Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -185,12 +190,43 @@
   *, *::before, *::after {
     @apply border-border outline-ring/50;
     font-family: var(--font-sans);
-    font-weight: 400; /* thin/regular by default */
+    font-weight: 400; /* regular default weight */
   }
 
   html, body {
-    @apply bg-background text-foreground;
-    font-weight: 100; /* thin text by default */
+    @apply text-foreground antialiased;
+    font-weight: 300;
+    min-height: 100vh;
+    background-color: var(--background);
+    background-image:
+      radial-gradient(closest-side at 18% 20%, rgba(56, 189, 248, 0.18), transparent 65%),
+      radial-gradient(farthest-corner at 85% 10%, rgba(59, 130, 246, 0.16), transparent 60%),
+      radial-gradient(closest-side at 50% 100%, rgba(129, 140, 248, 0.14), transparent 70%),
+      linear-gradient(135deg, rgba(6, 12, 23, 0.94), rgba(3, 18, 34, 0.98));
+    background-attachment: fixed;
+    scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
+    scrollbar-width: thin;
+  }
+
+  body::-webkit-scrollbar {
+    width: 10px;
+    background: transparent;
+  }
+
+  body::-webkit-scrollbar-track {
+    background: linear-gradient(180deg, rgba(9, 15, 26, 0.35), rgba(15, 23, 42, 0.18));
+    border-radius: 9999px;
+    margin: 6px;
+  }
+
+  body::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(56, 189, 248, 0.55), rgba(14, 165, 233, 0.45));
+    border-radius: 9999px;
+    box-shadow: 0 2px 6px rgba(14, 116, 144, 0.35);
+  }
+
+  body::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(56, 189, 248, 0.75), rgba(129, 140, 248, 0.6));
   }
 
   /* Hero Title */
@@ -205,12 +241,16 @@
 
   /* Paragraphs & Text */
   p, span, a, li, button {
-    font-weight: 100; /* thin for body and UI text */
+    font-weight: 300;
   }
 
   /* Cards & Popovers */
-  .card, .popover {
-    @apply bg-card text-card-foreground border border-border rounded-lg;
+  .card,
+  .popover {
+    background-color: var(--card);
+    color: var(--card-foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
     font-weight: 400;
   }
 }

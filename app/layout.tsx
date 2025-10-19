@@ -1,7 +1,5 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { GeistSans } from "geist/font/sans"
-import { GeistMono } from "geist/font/mono"
 import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -16,7 +14,7 @@ export const metadata: Metadata = {
   keywords: "AI retail, minimart management, inventory system, Kenya retail, distributor network",
   authors: [{ name: "vendai Team" }],
   icons: {
-    icon: "/logo-icon.png",
+    icon: "/logo-icon-remove.png",
   },
   openGraph: {
     title: "vendai - AI that runs the shop for you",
@@ -39,8 +37,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`font-sans ${GeistSans.variable} antialiased`}>
-  <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+      <body className="antialiased">
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <Suspense fallback={null}>{children}</Suspense>
           <Toaster />
         </ThemeProvider>

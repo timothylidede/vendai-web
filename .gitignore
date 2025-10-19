@@ -19,6 +19,10 @@ yarn-error.log*
 # env files
 .env*
 
+# generated media
+public/generated/
+public/image-gen/
+
 # vercel
 .vercel
 

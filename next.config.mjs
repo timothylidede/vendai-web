@@ -1,3 +1,5 @@
+import MiniCssExtractPlugin from "mini-css-extract-plugin"
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
@@ -14,6 +16,22 @@ const nextConfig = {
       },
     ],
     formats: ['image/avif', 'image/webp'], // modern formats
+  },
+  webpack: (config) => {
+    const hasMiniCssExtract = config.plugins.some(
+      (plugin) => plugin.constructor && plugin.constructor.name === "MiniCssExtractPlugin",
+    )
+
+    if (!hasMiniCssExtract) {
+      config.plugins.push(
+        new MiniCssExtractPlugin({
+          filename: "static/css/[name].[contenthash].css",
+          chunkFilename: "static/css/[name].[contenthash].css",
+        }),
+      )
+    }
+
+    return config
   },
 };
 
