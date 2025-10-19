@@ -145,10 +145,16 @@ const categoryColumns: GalleryCategory[][] = [
 const formatCategoryLabel = (label: string) =>
   label.replace(/\b\w/g, (char) => char.toUpperCase())
 
+const BANNER_MESSAGES = [
+  "Shop wholesale online from Kenyan distributors.",
+  "Get up to KES 20,000 in payment terms.",
+]
+
 const DISPLAY_YEAR = new Date().getFullYear()
 const FONT_STACK = '"Neue Haas Grotesk Display Pro", "Helvetica Neue", Helvetica, Arial, sans-serif'
-const IMAGE_WIDTH = 290
-const IMAGE_HEIGHT = (IMAGE_WIDTH * 4) / 3
+const DESKTOP_IMAGE_WIDTH = 290
+const MOBILE_IMAGE_WIDTH = 220
+const IMAGE_ASPECT_RATIO = 4 / 3
 const IMAGE_START_OFFSET = 295 // Starting X position per image (Studio Chen matches)
 const IMAGE_BOTTOM_SPACING = 40 // Space from bottom (Studio Chen constant)
 const CONTAINER_HEIGHT_MULTIPLIER = 1.02 // Container height = image height for tight stacking
@@ -158,22 +164,26 @@ function GalleryImage({
   item,
   index,
   scrollY,
+  isSmallScreen,
 }: {
   item: GalleryImageConfig
   index: number
   scrollY: number
+  isSmallScreen: boolean
 }) {
   const [isLoaded, setIsLoaded] = useState(false)
 
-  // Studio Chen's EXACT formula from their minified webpack bundle
-  const containerHeight = IMAGE_HEIGHT * CONTAINER_HEIGHT_MULTIPLIER
-  
+  const imageWidth = isSmallScreen ? MOBILE_IMAGE_WIDTH : DESKTOP_IMAGE_WIDTH
+  const imageHeight = imageWidth * IMAGE_ASPECT_RATIO
+  const startOffset = (IMAGE_START_OFFSET * imageWidth) / DESKTOP_IMAGE_WIDTH
+  const containerHeight = imageHeight * CONTAINER_HEIGHT_MULTIPLIER
+
   // Their config object structure (verified from minified code)
   const config = {
-    start: IMAGE_START_OFFSET * index,
-    delay: index === 0 ? 0 : DELAY_MULTIPLIER * IMAGE_HEIGHT,
-    target: IMAGE_HEIGHT * CONTAINER_HEIGHT_MULTIPLIER * index,
-    threshold: IMAGE_HEIGHT * CONTAINER_HEIGHT_MULTIPLIER * (index + 1),
+    start: startOffset * index,
+    delay: index === 0 ? 0 : DELAY_MULTIPLIER * imageHeight,
+    target: imageHeight * CONTAINER_HEIGHT_MULTIPLIER * index,
+    threshold: imageHeight * CONTAINER_HEIGHT_MULTIPLIER * (index + 1),
   }
 
   // Their exact progress calculation from minified bundle:
@@ -190,6 +200,8 @@ function GalleryImage({
   // Their exact transform formula: start * (1 - progress)
   // Rounded to 3 decimals like Studio Chen
   const translateX = Math.round(config.start * (1 - progress) * 1000) / 1000
+  const atBoundary = Math.abs(translateX) < 0.5
+  const shouldShowOverlay = isSmallScreen && atBoundary
   
   // Indicator visibility threshold (Studio Chen pattern)
   const showIndicator = scrollY > config.threshold
@@ -198,7 +210,7 @@ function GalleryImage({
     <div
       className="sticky will-change-transform"
       style={{
-        width: `${IMAGE_WIDTH}px`,
+        width: `${imageWidth}px`,
         height: `${containerHeight}px`,
         bottom: `${IMAGE_BOTTOM_SPACING - containerHeight}px`, // Studio Chen bottom calculation
         transformOrigin: "top left", // Explicit origin like Studio Chen
@@ -218,18 +230,26 @@ function GalleryImage({
           <Image
             src={item.src}
             alt={item.alt}
-            width={IMAGE_WIDTH}
-            height={IMAGE_HEIGHT}
-            sizes="290px"
+            width={imageWidth}
+            height={imageHeight}
+            sizes={`${imageWidth}px`}
             className={`w-full h-full object-cover origin-top-left will-change-transform transition-opacity duration-[350ms] ease-in-out ${
               isLoaded ? "opacity-100" : "opacity-0"
             }`}
-            style={{ width: "290px", height: `${IMAGE_HEIGHT}px` }}
+            style={{ width: `${imageWidth}px`, height: `${imageHeight}px` }}
             onLoad={() => setIsLoaded(true)}
             priority={index === 0}
           />
-          <div className="absolute inset-0 flex items-center justify-center bg-black/0 text-white transition-all duration-300 group-hover:bg-black/65">
-            <span className="translate-y-4 text-xs font-bold tracking-[0.3em] uppercase opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+          <div
+            className={`absolute inset-0 flex items-center justify-center text-white transition-all duration-300 ${
+              shouldShowOverlay ? "bg-black/65" : "bg-black/0"
+            } group-hover:bg-black/65`}
+          >
+            <span
+              className={`translate-y-4 text-[10px] font-bold tracking-[0.3em] uppercase opacity-0 transition-all duration-300 sm:text-xs ${
+                shouldShowOverlay ? "translate-y-0 opacity-100" : ""
+              } group-hover:translate-y-0 group-hover:opacity-100`}
+            >
               {item.label}
             </span>
           </div>
@@ -241,6 +261,7 @@ function GalleryImage({
 
 function Gallery() {
   const [scrollY, setScrollY] = useState(0)
+  const [isSmallScreen, setIsSmallScreen] = useState(false)
 
   useEffect(() => {
     let rafId: number | null = null
@@ -267,6 +288,14 @@ function Gallery() {
     }
   }, [])
 
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    const updateSize = () => setIsSmallScreen(window.innerWidth < 640)
+    updateSize()
+    window.addEventListener("resize", updateSize)
+    return () => window.removeEventListener("resize", updateSize)
+  }, [])
+
   // Studio Chen's container width matches viewport with padding compensation
   return (
     <div 
@@ -274,7 +303,13 @@ function Gallery() {
       style={{ width: "100vw" }} // Explicit width like Studio Chen
     >
       {galleryImages.map((item, index) => (
-        <GalleryImage key={item.id} item={item} index={index} scrollY={scrollY} />
+        <GalleryImage
+          key={item.id}
+          item={item}
+          index={index}
+          scrollY={scrollY}
+          isSmallScreen={isSmallScreen}
+        />
       ))}
     </div>
   )
@@ -312,13 +347,52 @@ export default function HomePage() {
       className="relative min-h-screen text-white antialiased"
       style={{ fontFamily: FONT_STACK }}
     >
+      <div className="fixed inset-x-0 top-0 z-40 overflow-hidden bg-[color:var(--background)] px-4 py-2 text-xs tracking-[0.15em] text-white/70 sm:px-6 sm:text-sm">
+        <div className="relative h-5 overflow-hidden sm:h-6">
+          {reduceMotion ? (
+            <span className="flex h-full w-full items-center justify-center whitespace-nowrap">
+              {BANNER_MESSAGES[0]}
+            </span>
+          ) : (
+            BANNER_MESSAGES.map((message, index) => (
+              <span
+                key={message}
+                className="absolute inset-0 flex h-full w-full items-center justify-center whitespace-nowrap text-center will-change-transform"
+                style={{
+                  animation: "teleprompterX 16s linear infinite",
+                  animationDelay: `${index * 8}s`,
+                }}
+              >
+                {message}
+              </span>
+            ))
+          )}
+        </div>
+      </div>
 
-      <main className="relative z-10">
-        <section className="mx-auto pl-2 pr-2 pb-20 pt-4 sm:pl-2 lg:pl-2 lg:pb-28 lg:pt-2">
+  <header className="fixed inset-x-0 top-10 z-30 flex items-center justify-between px-3 py-3 bg-[var(--background)] backdrop-blur-md sm:hidden">
+        <Link href="/" className="group flex items-center">
+          <img
+            src="/logo-icon-remove.png"
+            alt="vendai icon"
+            className="h-6 w-6 transition-all duration-500 group-hover:animate-[spin_0.9s_linear_infinite] sm:h-8 sm:w-8"
+          />
+        </Link>
+        <button
+          type="button"
+          onClick={() => (window.location.href = "https://app.vendai.digital")}
+          className="rounded-full bg-white/10 px-3 py-1 text-[9px] uppercase tracking-[0.25em] text-white/80 transition-all duration-300 hover:bg-white/20 hover:text-white sm:px-4 sm:py-1.5 sm:text-[10px]"
+        >
+          sign in
+        </button>
+      </header>
+
+  <main className="relative z-10 pt-[104px] sm:pt-0">
+  <section className="mx-auto pl-2 pr-2 pb-20 pt-0 sm:pl-2 lg:pl-2 lg:pb-28 lg:pt-2">
           <div className="grid gap-y-16 lg:grid-cols-[290px_minmax(0,0.6fr)_minmax(0,1fr)] lg:gap-20">
-            <div className="space-y-12">
+            <div className="space-y-12 lg:mt-16">
 
-              <div className="text-sm leading-relaxed text-white/70" style={{ width: "290px" }}>
+              <div className="text-xs leading-relaxed text-white/70 w-[210px] sm:w-[290px] sm:text-sm">
                 <div className="grid grid-cols-2 gap-x-5 gap-y-2">
                   {categoryColumns.map((column, columnIndex) => (
                     <div key={`category-column-${columnIndex}`} className="space-y-2">
@@ -328,12 +402,32 @@ export default function HomePage() {
                           href={`/gallery?slide=${category.index}`}
                           className="flex items-center justify-between text-white/80 transition-all duration-300 hover:opacity-60 hover:text-blue-300 no-underline border-b border-transparent hover:border-blue-300/50"
                         >
-                          <span className="truncate">{formatCategoryLabel(category.label)}</span>
-                          <span className="text-xs text-white/50">-&gt;</span>
+                          <span className="truncate text-[11px] sm:text-sm">{formatCategoryLabel(category.label)}</span>
+                          <span className="text-[10px] text-white/50 sm:text-xs">-&gt;</span>
                         </Link>
                       ))}
                     </div>
                   ))}
+                </div>
+                <div className="mt-6 flex items-center gap-3 text-[9px] uppercase tracking-[0.35em] text-white sm:mt-8 sm:text-[10px]">
+                  <span className="font-sans">scroll to explore</span>
+                  <div className="animate-bounce rounded-full border border-white/40 p-1.5 sm:p-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      className="h-3.5 w-3.5 text-white sm:h-4 sm:w-4"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M12 5v14m0 0l-5-5m5 5l5-5"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
                 </div>
               </div>
             </div>
@@ -369,7 +463,7 @@ export default function HomePage() {
         </section>
       </main>
 
-      <footer className="relative z-10 border-t border-white/10 bg-transparent px-2 py-10 text-[9px] uppercase tracking-[0.35em] text-white/60 sm:px-4 lg:px-6">
+  <footer className="relative z-10 border-t border-white/10 bg-transparent px-2 py-10 text-[8px] uppercase tracking-[0.35em] text-white/60 sm:px-4 sm:text-[9px] lg:px-6">
         <div className="max-w-6xl">
           <a
             href="https://www.vendai.africa"
@@ -377,8 +471,8 @@ export default function HomePage() {
             rel="noopener noreferrer"
             className="group inline-flex items-center gap-2 border-b border-transparent text-white/60 transition-colors duration-200 hover:text-white"
           >
-            <span className="transition-opacity duration-200 group-hover:opacity-80">visit our company website</span>
-            <span className="text-xs text-white/50 transition-transform duration-200 group-hover:translate-x-1">-&gt;</span>
+            <span className="transition-opacity duration-200 group-hover:opacity-80 text-[9px] sm:text-[10px] lg:text-[11px]">visit our company website</span>
+            <span className="text-[9px] text-white/50 transition-transform duration-200 group-hover:translate-x-1 sm:text-xs lg:text-sm">-&gt;</span>
           </a>
         </div>
       </footer>
