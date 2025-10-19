@@ -318,6 +318,7 @@ function Gallery() {
 export default function HomePage() {
   const [isWindows, setIsWindows] = useState(false)
   const [reduceMotion, setReduceMotion] = useState(false)
+  const [bannerIndex, setBannerIndex] = useState(0)
 
   useEffect(() => {
     if (typeof window === "undefined") return
@@ -331,6 +332,18 @@ export default function HomePage() {
     return () => mq.removeEventListener?.("change", updateMotion)
   }, [])
 
+  useEffect(() => {
+    if (reduceMotion) {
+      setBannerIndex(0)
+      return
+    }
+    setBannerIndex(0)
+    const interval = window.setInterval(() => {
+      setBannerIndex((prev) => (prev + 1) % BANNER_MESSAGES.length)
+    }, 12000)
+    return () => window.clearInterval(interval)
+  }, [reduceMotion])
+
   const handleDownload = () => {
     toast({
       title: "Starting download…",
@@ -342,30 +355,32 @@ export default function HomePage() {
     window.location.href = `/api/download/win?_=${ts}`
   }
 
+  const handleSignIn = useCallback(() => {
+    if (typeof window === "undefined") return
+    window.open("https://app.vendai.digital", "_blank", "noopener,noreferrer")
+  }, [])
+
   return (
     <div
       className="relative min-h-screen text-white antialiased"
       style={{ fontFamily: FONT_STACK }}
     >
-      <div className="fixed inset-x-0 top-0 z-40 overflow-hidden bg-[color:var(--background)] px-4 py-2 text-xs tracking-[0.15em] text-white/70 sm:px-6 sm:text-sm">
-        <div className="relative h-5 overflow-hidden sm:h-6">
+  <div className="fixed inset-x-0 top-0 z-40 overflow-hidden bg-[color:var(--background)]/75 backdrop-blur-sm px-4 py-2 text-xs tracking-[0.15em] text-white/70 sm:px-6 sm:text-sm">
+        <div className="relative h-[1.65rem] overflow-hidden sm:h-[1.9rem]">
           {reduceMotion ? (
             <span className="flex h-full w-full items-center justify-center whitespace-nowrap">
               {BANNER_MESSAGES[0]}
             </span>
           ) : (
-            BANNER_MESSAGES.map((message, index) => (
-              <span
-                key={message}
-                className="absolute inset-0 flex h-full w-full items-center justify-center whitespace-nowrap text-center will-change-transform"
-                style={{
-                  animation: "teleprompterX 16s linear infinite",
-                  animationDelay: `${index * 8}s`,
-                }}
-              >
-                {message}
-              </span>
-            ))
+            <span
+              key={`${bannerIndex}-${BANNER_MESSAGES[bannerIndex]}`}
+              className="absolute inset-0 flex h-full w-full items-center justify-center whitespace-nowrap text-center will-change-transform"
+              style={{
+                animation: "teleprompterX 12s linear forwards",
+              }}
+            >
+              {BANNER_MESSAGES[bannerIndex]}
+            </span>
           )}
         </div>
       </div>
@@ -380,7 +395,7 @@ export default function HomePage() {
         </Link>
         <button
           type="button"
-          onClick={() => (window.location.href = "https://app.vendai.digital")}
+          onClick={handleSignIn}
           className="rounded-full bg-white/10 px-3 py-1 text-[9px] uppercase tracking-[0.25em] text-white/80 transition-all duration-300 hover:bg-white/20 hover:text-white sm:px-4 sm:py-1.5 sm:text-[10px]"
         >
           sign in
@@ -446,7 +461,7 @@ export default function HomePage() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => window.location.href = 'https://app.vendai.digital'}
+                  onClick={handleSignIn}
                   className="px-6 py-2 text-xs uppercase tracking-[0.2em] bg-black text-white rounded-full hover:shadow-[0_0_20px_rgba(0,0,0,0.4)] transition-shadow duration-300"
                 >
                   sign in
