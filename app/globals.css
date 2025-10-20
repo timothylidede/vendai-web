@@ -32,15 +32,15 @@
     transform: translateX(110%);
     opacity: 0;
   }
-  18% {
+  20% {
     transform: translateX(0%);
     opacity: 1;
   }
-  55% {
+  65% {
     transform: translateX(0%);
     opacity: 1;
   }
-  70% {
+  80% {
     transform: translateX(-110%);
     opacity: 0;
   }

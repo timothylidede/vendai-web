@@ -365,7 +365,7 @@ export default function HomePage() {
       className="relative min-h-screen text-white antialiased"
       style={{ fontFamily: FONT_STACK }}
     >
-  <div className="fixed inset-x-0 top-0 z-40 overflow-hidden bg-[color:var(--background)]/75 backdrop-blur-sm px-4 py-2 text-xs tracking-[0.15em] text-white/70 sm:px-6 sm:text-sm">
+  <div className="fixed inset-x-0 top-0 z-40 overflow-hidden bg-[color:var(--background)]/75 backdrop-blur-sm px-4 py-2 text-xs tracking-[0.15em] text-white sm:px-6 sm:text-sm">
         <div className="relative h-[1.65rem] overflow-hidden sm:h-[1.9rem]">
           {reduceMotion ? (
             <span className="flex h-full w-full items-center justify-center whitespace-nowrap">
@@ -385,7 +385,7 @@ export default function HomePage() {
         </div>
       </div>
 
-  <header className="fixed inset-x-0 top-10 z-30 flex items-center justify-between px-3 py-3 bg-[var(--background)] backdrop-blur-md sm:hidden">
+  <header className="fixed inset-x-0 top-10 z-30 flex items-center justify-between px-3 py-3 bg-[color:var(--background)]/75 backdrop-blur-sm sm:hidden">
         <Link href="/" className="group flex items-center">
           <img
             src="/logo-icon-remove.png"
@@ -407,7 +407,7 @@ export default function HomePage() {
           <div className="grid gap-y-16 lg:grid-cols-[290px_minmax(0,0.6fr)_minmax(0,1fr)] lg:gap-20">
             <div className="space-y-12 lg:mt-16">
 
-              <div className="text-xs leading-relaxed text-white/70 w-[210px] sm:w-[290px] sm:text-sm">
+              <div className="text-xs leading-relaxed text-white w-[210px] sm:w-[290px] sm:text-sm">
                 <div className="grid grid-cols-2 gap-x-5 gap-y-2">
                   {categoryColumns.map((column, columnIndex) => (
                     <div key={`category-column-${columnIndex}`} className="space-y-2">
@@ -415,10 +415,10 @@ export default function HomePage() {
                         <Link
                           key={category.id}
                           href={`/gallery?slide=${category.index}`}
-                          className="flex items-center justify-between text-white/80 transition-all duration-300 hover:opacity-60 hover:text-blue-300 no-underline border-b border-transparent hover:border-blue-300/50"
+                          className="flex items-center justify-between text-white transition-all duration-300 hover:opacity-60 hover:text-blue-300 no-underline border-b border-transparent hover:border-blue-300/50"
                         >
                           <span className="truncate text-[11px] sm:text-sm">{formatCategoryLabel(category.label)}</span>
-                          <span className="text-[10px] text-white/50 sm:text-xs">-&gt;</span>
+                          <span className="text-[10px] text-white sm:text-xs">-&gt;</span>
                         </Link>
                       ))}
                     </div>
@@ -472,7 +472,7 @@ export default function HomePage() {
             <div></div>
           </div>
 
-          <div className="mt-24 lg:mt-70 flex justify-center">
+          <div className="mt-24 lg:mt-60 flex justify-center">
             <Gallery />
           </div>
         </section>
@@ -484,10 +484,10 @@ export default function HomePage() {
             href="https://www.vendai.africa"
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex items-center gap-2 border-b border-transparent text-white/60 transition-colors duration-200 hover:text-white"
+            className="group inline-flex items-center gap-2 border-b border-transparent text-white transition-colors duration-200 hover:text-white"
           >
             <span className="transition-opacity duration-200 group-hover:opacity-80 text-[9px] sm:text-[10px] lg:text-[11px]">visit our company website</span>
-            <span className="text-[9px] text-white/50 transition-transform duration-200 group-hover:translate-x-1 sm:text-xs lg:text-sm">-&gt;</span>
+            <span className="text-[9px] text-white transition-transform duration-200 group-hover:translate-x-1 sm:text-xs lg:text-sm">-&gt;</span>
           </a>
         </div>
       </footer>
