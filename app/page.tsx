@@ -114,13 +114,13 @@ const galleryImages: GalleryImageConfig[] = [
   },
   {
     id: "industrial-equipment",
-    label: "industrial equipment",
+    label: "industrial",
     src: "/image-gen/latest/industrial-equipment.png",
     alt: "Factory gear, machine parts, and a safety helmet lit in a minimal industrial vignette.",
   },
   {
     id: "cleaning-supplies",
-    label: "cleaning supplies",
+    label: "cleaning",
     src: "/image-gen/latest/cleaning-supplies.png",
     alt: "Bright display of detergents, spray bottles, mop, and gloves against a white surface.",
   },
@@ -146,8 +146,12 @@ const formatCategoryLabel = (label: string) =>
   label.replace(/\b\w/g, (char) => char.toUpperCase())
 
 const BANNER_MESSAGES = [
-  "Shop wholesale online from Kenyan distributors.",
-  "Get up to KES 20,000 in payment terms.",
+  <>
+    <span>Shop wholesale online from Kenyan distributors.</span>
+  </>,
+  <>
+    <span>Get up to <span className="text-green-500">KES 20,000</span> in payment terms.</span>
+  </>,
 ]
 
 const DISPLAY_YEAR = new Date().getFullYear()
@@ -158,18 +162,20 @@ const IMAGE_ASPECT_RATIO = 4 / 3
 const IMAGE_START_OFFSET = 295 // Starting X position per image (Studio Chen matches)
 const IMAGE_BOTTOM_SPACING = 40 // Space from bottom (Studio Chen constant)
 const CONTAINER_HEIGHT_MULTIPLIER = 1.02 // Container height = image height for tight stacking
-const DELAY_MULTIPLIER = 0.8 // Studio Chen delay coefficient
+const DELAY_MULTIPLIER = 0.9 // Studio Chen delay coefficient
 
 function GalleryImage({
   item,
   index,
   scrollY,
   isSmallScreen,
+  highlightedId,
 }: {
   item: GalleryImageConfig
   index: number
   scrollY: number
   isSmallScreen: boolean
+  highlightedId: string | null
 }) {
   const [isLoaded, setIsLoaded] = useState(false)
 
@@ -201,13 +207,14 @@ function GalleryImage({
   // Rounded to 3 decimals like Studio Chen
   const translateX = Math.round(config.start * (1 - progress) * 1000) / 1000
   const atBoundary = Math.abs(translateX) < 0.5
-  const shouldShowOverlay = isSmallScreen && atBoundary
+  const shouldShowOverlay = (isSmallScreen && atBoundary) || highlightedId === item.id
   
   // Indicator visibility threshold (Studio Chen pattern)
   const showIndicator = scrollY > config.threshold
 
   return (
     <div
+      id={`gallery-${item.id}`}
       className="sticky will-change-transform"
       style={{
         width: `${imageWidth}px`,
@@ -262,6 +269,8 @@ function GalleryImage({
 function Gallery() {
   const [scrollY, setScrollY] = useState(0)
   const [isSmallScreen, setIsSmallScreen] = useState(false)
+  const [highlightedId, setHighlightedId] = useState<string | null>(null)
+  const highlightTimeoutRef = useRef<number | null>(null)
 
   useEffect(() => {
     let rafId: number | null = null
@@ -294,6 +303,25 @@ function Gallery() {
     updateSize()
     window.addEventListener("resize", updateSize)
     return () => window.removeEventListener("resize", updateSize)
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      if (highlightTimeoutRef.current !== null) {
+        window.clearTimeout(highlightTimeoutRef.current)
+      }
+    }
+  }, [])
+
+  const highlightImage = useCallback((id: string) => {
+    setHighlightedId(id)
+    if (highlightTimeoutRef.current !== null) {
+      window.clearTimeout(highlightTimeoutRef.current)
+    }
+    highlightTimeoutRef.current = window.setTimeout(() => {
+      setHighlightedId(null)
+      highlightTimeoutRef.current = null
+    }, 10000)
   }, [])
 
   // Studio Chen's container width matches viewport with padding compensation
@@ -365,8 +393,25 @@ export default function HomePage() {
       className="relative min-h-screen text-white antialiased"
       style={{ fontFamily: FONT_STACK }}
     >
-  <div className="fixed inset-x-0 top-0 z-40 overflow-hidden bg-[color:var(--background)]/75 backdrop-blur-sm px-4 py-2 text-xs tracking-[0.15em] text-white sm:px-6 sm:text-sm">
-        <div className="relative h-[1.65rem] overflow-hidden sm:h-[1.9rem]">
+  <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between px-3 py-3 bg-[color:var(--background)]/75 backdrop-blur-sm sm:hidden">
+        <Link href="/" className="group flex items-center">
+          <img
+            src="/logo-icon-remove.png"
+            alt="vendai icon"
+            className="h-6 w-6 transition-all duration-500 group-hover:animate-[spin_0.9s_linear_infinite] sm:h-8 sm:w-8"
+          />
+        </Link>
+        <button
+          type="button"
+          onClick={handleSignIn}
+          className="rounded-full bg-white/10 px-3 py-1 text-[9px] uppercase tracking-[0.25em] text-white/80 transition-all duration-300 hover:bg-white/20 hover:text-white sm:px-4 sm:py-1.5 sm:text-[10px]"
+        >
+          sign in
+        </button>
+      </header>
+
+  <div className="fixed inset-x-0 top-0 z-30 overflow-hidden bg-[color:var(--background)]/75 backdrop-blur-sm px-3 py-1 text-[10px] tracking-[0.12em] text-white sm:top-0 sm:z-40 sm:px-6 sm:py-2 sm:text-sm sm:tracking-[0.15em] top-[52px]">
+        <div className="relative h-[1.2rem] overflow-hidden sm:h-[1.9rem]">
           {reduceMotion ? (
             <span className="flex h-full w-full items-center justify-center whitespace-nowrap">
               {BANNER_MESSAGES[0]}
@@ -385,24 +430,7 @@ export default function HomePage() {
         </div>
       </div>
 
-  <header className="fixed inset-x-0 top-10 z-30 flex items-center justify-between px-3 py-3 bg-[color:var(--background)]/75 backdrop-blur-sm sm:hidden">
-        <Link href="/" className="group flex items-center">
-          <img
-            src="/logo-icon-remove.png"
-            alt="vendai icon"
-            className="h-6 w-6 transition-all duration-500 group-hover:animate-[spin_0.9s_linear_infinite] sm:h-8 sm:w-8"
-          />
-        </Link>
-        <button
-          type="button"
-          onClick={handleSignIn}
-          className="rounded-full bg-white/10 px-3 py-1 text-[9px] uppercase tracking-[0.25em] text-white/80 transition-all duration-300 hover:bg-white/20 hover:text-white sm:px-4 sm:py-1.5 sm:text-[10px]"
-        >
-          sign in
-        </button>
-      </header>
-
-  <main className="relative z-10 pt-[104px] sm:pt-0">
+  <main className="relative z-10 pt-[95px] sm:pt-0">
   <section className="mx-auto pl-2 pr-2 pb-20 pt-0 sm:pl-2 lg:pl-2 lg:pb-28 lg:pt-2">
           <div className="grid gap-y-16 lg:grid-cols-[290px_minmax(0,0.6fr)_minmax(0,1fr)] lg:gap-20">
             <div className="space-y-12 lg:mt-16">
@@ -412,19 +440,36 @@ export default function HomePage() {
                   {categoryColumns.map((column, columnIndex) => (
                     <div key={`category-column-${columnIndex}`} className="space-y-2">
                       {column.map((category) => (
-                        <Link
+                        <button
                           key={category.id}
-                          href={`/products/${category.id}`}
-                          className="flex items-center justify-between text-white/80 transition-all duration-300 hover:opacity-60 hover:text-blue-300 no-underline border-b border-transparent hover:border-blue-300/50"
+                          onClick={() => {
+                            const imageWidth = window.innerWidth < 640 ? MOBILE_IMAGE_WIDTH : DESKTOP_IMAGE_WIDTH
+                            const imageHeight = imageWidth * IMAGE_ASPECT_RATIO
+                            const containerHeight = imageHeight * CONTAINER_HEIGHT_MULTIPLIER
+                            const startOffset = (IMAGE_START_OFFSET * imageWidth) / DESKTOP_IMAGE_WIDTH
+                            
+                            // Calculate the scroll position needed to bring this image into view
+                            const config = {
+                              start: startOffset * category.index,
+                              delay: category.index === 0 ? 0 : DELAY_MULTIPLIER * imageHeight,
+                              target: imageHeight * CONTAINER_HEIGHT_MULTIPLIER * category.index,
+                              threshold: imageHeight * CONTAINER_HEIGHT_MULTIPLIER * (category.index + 1),
+                            }
+                            
+                            // Scroll to the position where this image would be at progress = 1 (fully left)
+                            const targetScroll = config.delay + config.target
+                            window.scrollTo({ top: targetScroll, behavior: 'smooth' })
+                          }}
+                          className="flex w-full items-center justify-between text-white/80 transition-all duration-300 hover:opacity-60 hover:text-blue-300 border-b border-transparent hover:border-blue-300/50 text-left cursor-pointer"
                         >
                           <span className="truncate text-[11px] sm:text-sm">{formatCategoryLabel(category.label)}</span>
                           <span className="text-[10px] text-white/50 sm:text-xs">-&gt;</span>
-                        </Link>
+                        </button>
                       ))}
                     </div>
                   ))}
                 </div>
-                <div className="mt-6 flex items-center gap-3 text-[9px] uppercase tracking-[0.35em] text-white sm:mt-8 sm:text-[10px]">
+                <div className="mt-24 lg:mt-35 flex items-center justify-between text-[9px] uppercase tracking-[0.35em] text-white sm:mt-8 sm:text-[10px]">
                   <span className="font-sans">scroll to explore</span>
                   <div className="animate-bounce rounded-full border border-white/40 p-1.5 sm:p-2">
                     <svg
@@ -472,7 +517,7 @@ export default function HomePage() {
             <div></div>
           </div>
 
-          <div className="mt-24 lg:mt-60 flex justify-center">
+          <div className="mt-24 lg:mt-15 flex justify-center">
             <Gallery />
           </div>
         </section>
