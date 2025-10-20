@@ -217,7 +217,7 @@ function GalleryImage({
         transform: `translate3d(${translateX}px, 0px, 0px)`, // Studio Chen format
       }}
     >
-      <Link href={`/gallery?slide=${index}`} className="block cursor-pointer relative group">
+      <Link href={`/products/${item.id}`} className="block cursor-pointer relative group">
         <svg
           className={`${showIndicator ? "opacity-100" : "opacity-0"} group-hover:opacity-100 mix-blend-difference w-2 absolute top-2.5 left-2.5 z-20 transition-opacity duration-300`}
           viewBox="0 0 6 6"
@@ -414,11 +414,11 @@ export default function HomePage() {
                       {column.map((category) => (
                         <Link
                           key={category.id}
-                          href={`/gallery?slide=${category.index}`}
-                          className="flex items-center justify-between text-white transition-all duration-300 hover:opacity-60 hover:text-blue-300 no-underline border-b border-transparent hover:border-blue-300/50"
+                          href={`/products/${category.id}`}
+                          className="flex items-center justify-between text-white/80 transition-all duration-300 hover:opacity-60 hover:text-blue-300 no-underline border-b border-transparent hover:border-blue-300/50"
                         >
                           <span className="truncate text-[11px] sm:text-sm">{formatCategoryLabel(category.label)}</span>
-                          <span className="text-[10px] text-white sm:text-xs">-&gt;</span>
+                          <span className="text-[10px] text-white/50 sm:text-xs">-&gt;</span>
                         </Link>
                       ))}
                     </div>
