@@ -147,7 +147,7 @@ const formatCategoryLabel = (label: string) =>
 
 const BANNER_MESSAGES = [
   <>
-    <span>Shop wholesale online from Kenyan distributors.</span>
+    <span>Shop wholesale online from Kenyan distributors <img src="/kenyan-flag.png" alt="Kenya" className="inline-block w-4 h-4 sm:w-5 sm:h-5 ml-1" /></span>
   </>,
   <>
     <span>Get up to <span className="text-green-500">KES 20,000</span> in payment terms.</span>
@@ -266,7 +266,7 @@ function GalleryImage({
   )
 }
 
-function Gallery() {
+function Gallery({ onHighlightRequest }: { onHighlightRequest?: (callback: (id: string) => void) => void }) {
   const [scrollY, setScrollY] = useState(0)
   const [isSmallScreen, setIsSmallScreen] = useState(false)
   const [highlightedId, setHighlightedId] = useState<string | null>(null)
@@ -324,6 +324,12 @@ function Gallery() {
     }, 10000)
   }, [])
 
+  useEffect(() => {
+    if (onHighlightRequest) {
+      onHighlightRequest(highlightImage)
+    }
+  }, [onHighlightRequest, highlightImage])
+
   // Studio Chen's container width matches viewport with padding compensation
   return (
     <div 
@@ -337,6 +343,7 @@ function Gallery() {
           index={index}
           scrollY={scrollY}
           isSmallScreen={isSmallScreen}
+          highlightedId={highlightedId}
         />
       ))}
     </div>
@@ -347,6 +354,7 @@ export default function HomePage() {
   const [isWindows, setIsWindows] = useState(false)
   const [reduceMotion, setReduceMotion] = useState(false)
   const [bannerIndex, setBannerIndex] = useState(0)
+  const galleryHighlightRef = useRef<((id: string) => void) | null>(null)
 
   useEffect(() => {
     if (typeof window === "undefined") return
@@ -443,6 +451,16 @@ export default function HomePage() {
                         <button
                           key={category.id}
                           onClick={() => {
+                            if (category.id === "general-trade") {
+                              const target = document.getElementById("gallery-general-trade")
+                              if (target) {
+                                target.scrollIntoView({ behavior: "smooth", block: "start" })
+                                if (galleryHighlightRef.current) {
+                                  galleryHighlightRef.current(category.id)
+                                }
+                              }
+                              return
+                            }
                             const imageWidth = window.innerWidth < 640 ? MOBILE_IMAGE_WIDTH : DESKTOP_IMAGE_WIDTH
                             const imageHeight = imageWidth * IMAGE_ASPECT_RATIO
                             const containerHeight = imageHeight * CONTAINER_HEIGHT_MULTIPLIER
@@ -458,7 +476,35 @@ export default function HomePage() {
                             
                             // Scroll to the position where this image would be at progress = 1 (fully left)
                             const targetScroll = config.delay + config.target
-                            window.scrollTo({ top: targetScroll, behavior: 'smooth' })
+                            
+                            // Slower scroll with custom behavior
+                            const startScroll = window.scrollY
+                            const distance = targetScroll - startScroll
+                            const duration = 1500 // 1.5 seconds for slower scroll
+                            const startTime = performance.now()
+                            
+                            const easeInOutCubic = (t: number) => {
+                              return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+                            }
+                            
+                            const scroll = (currentTime: number) => {
+                              const elapsed = currentTime - startTime
+                              const progress = Math.min(elapsed / duration, 1)
+                              const eased = easeInOutCubic(progress)
+                              
+                              window.scrollTo(0, startScroll + distance * eased)
+                              
+                              if (progress < 1) {
+                                requestAnimationFrame(scroll)
+                              } else {
+                                // Trigger highlight after scroll completes
+                                if (galleryHighlightRef.current) {
+                                  galleryHighlightRef.current(category.id)
+                                }
+                              }
+                            }
+                            
+                            requestAnimationFrame(scroll)
                           }}
                           className="flex w-full items-center justify-between text-white/80 transition-all duration-300 hover:opacity-60 hover:text-blue-300 border-b border-transparent hover:border-blue-300/50 text-left cursor-pointer"
                         >
@@ -518,7 +564,7 @@ export default function HomePage() {
           </div>
 
           <div className="mt-24 lg:mt-15 flex justify-center">
-            <Gallery />
+            <Gallery onHighlightRequest={(callback) => { galleryHighlightRef.current = callback }} />
           </div>
         </section>
       </main>
