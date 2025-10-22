@@ -18,9 +18,9 @@ const CATEGORY_PRODUCTS: Record<string, { name: string; items: (string | Product
     name: "General Trade",
     items: [
       { name: "Rice 25kg", image: "/image-gen/products/rice.png" },
-      "Cooking Oil 5L",
-      "Sugar 50kg",
-      "Wheat Flour 25kg",
+      { name: "Cooking Oil 5L", image: "/image-gen/products/cooking-oil.png" },
+      { name: "Sugar 50kg", image: "/image-gen/products/sugar.png" },
+      { name: "Wheat Flour 25kg", image: "/image-gen/products/wheat-flour.png" },
       "Maize Flour 10kg",
       "Salt 1kg",
       "Tea Leaves 500g",
