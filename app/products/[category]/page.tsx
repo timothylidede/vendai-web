@@ -8,11 +8,16 @@ import { useCallback } from "react"
 const FONT_STACK = '"Neue Haas Grotesk Display Pro", "Helvetica Neue", Helvetica, Arial, sans-serif'
 
 // Category to product mapping
-const CATEGORY_PRODUCTS: Record<string, { name: string; items: string[] }> = {
+type ProductItem = {
+  name: string
+  image?: string
+}
+
+const CATEGORY_PRODUCTS: Record<string, { name: string; items: (string | ProductItem)[] }> = {
   "general-trade": {
     name: "General Trade",
     items: [
-      "Rice 25kg",
+      { name: "Rice 25kg", image: "/image-gen/products/rice.png" },
       "Cooking Oil 5L",
       "Sugar 50kg",
       "Wheat Flour 25kg",
@@ -292,67 +297,161 @@ export default function ProductsPage() {
     notFound()
   }
 
+  // Calculate grid layout
+  const totalItems = categoryData.items.length
+  const columns = 3 // lg:grid-cols-3
+  const columnsSmall = 2 // grid-cols-2
+  
+  // Determine which items are in the last row (for different screen sizes)
+  const lastRowStartLg = Math.floor((totalItems - 1) / columns) * columns
+  const lastRowStartSm = Math.floor((totalItems - 1) / columnsSmall) * columnsSmall
+  
+  // Calculate second-to-last row for small screens
+  const secondLastRowStartSm = lastRowStartSm - columnsSmall
+
   return (
     <div
-      className="relative min-h-screen bg-[color:var(--background)] text-white antialiased"
-      style={{ fontFamily: FONT_STACK }}
+      className="relative min-h-screen text-white antialiased"
+      style={{ 
+        fontFamily: FONT_STACK,
+        backgroundColor: 'var(--background)',
+        backgroundImage: `
+          radial-gradient(closest-side at 18% 20%, rgba(56, 189, 248, 0.18), transparent 65%),
+          radial-gradient(farthest-corner at 85% 10%, rgba(59, 130, 246, 0.16), transparent 60%),
+          radial-gradient(closest-side at 50% 100%, rgba(129, 140, 248, 0.14), transparent 70%),
+          linear-gradient(135deg, rgba(6, 12, 23, 0.94), rgba(3, 18, 34, 0.98))
+        `,
+        backgroundAttachment: 'fixed'
+      }}
     >
       {/* Header */}
-      <header className="fixed inset-x-0 top-0 z-30 flex items-center justify-between border-b border-white/10 bg-[color:var(--background)]/80 px-4 py-4 backdrop-blur-sm sm:px-6 lg:px-8">
-        <Link href="/" className="group flex items-center gap-3">
-          <img
-            src="/logo-icon-remove.png"
-            alt="vendai icon"
-            className="h-7 w-7 transition-all duration-500 group-hover:rotate-[360deg] sm:h-8 sm:w-8"
-          />
-          <span className="text-sm font-light uppercase tracking-[0.3em] text-white/90 sm:text-base">
+      <header className="fixed inset-x-0 top-0 z-30 overflow-hidden bg-[color:var(--background)]/75 px-3 py-1 text-[10px] tracking-[0.12em] text-white backdrop-blur-sm sm:px-6 sm:py-2 sm:text-sm sm:tracking-[0.15em]">
+        <div className="flex h-full items-center justify-between">
+          <Link href="/" className="group flex items-center transition-opacity duration-300 hover:opacity-70">
+            <svg 
+              className="h-5 w-5 sm:h-6 sm:w-6" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+              strokeWidth={1.5}
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                d="M15 19l-7-7 7-7" 
+              />
+            </svg>
+          </Link>
+          <span className="absolute left-1/2 -translate-x-1/2 text-[9px] font-light uppercase tracking-[0.25em] text-white/90 sm:text-[10px]">
             {categoryData.name}
           </span>
-        </Link>
-        <button
-          type="button"
-          onClick={handleSignIn}
-          className="rounded-full bg-white/10 px-4 py-2 text-xs uppercase tracking-[0.25em] text-white/90 transition-all duration-300 hover:bg-white/20 hover:text-white sm:px-6 sm:text-sm"
-        >
-          sign in
-        </button>
+          <a
+            href="https://app.vendai.digital"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full bg-white/10 px-3 py-1 text-[9px] uppercase tracking-[0.25em] text-white/80 transition-all duration-300 hover:bg-white/20 hover:text-white sm:px-4 sm:py-1.5 sm:text-[10px]"
+          >
+            sign up
+          </a>
+        </div>
       </header>
 
       {/* Main Content */}
-      <main className="px-4 pb-16 pt-24 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
+      <main className="pt-16 sm:pt-24">
+        <div className="w-full">
           {/* Product Grid */}
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-3 lg:gap-8">
-            {categoryData.items.map((item, index) => (
-              <div
-                key={`${category}-${index}`}
-                className="group relative aspect-square overflow-hidden rounded-lg border border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:bg-white/10"
-              >
-                <div className="flex h-full w-full flex-col items-center justify-center p-4">
-                  <div className="mb-4 flex h-32 w-32 items-center justify-center overflow-hidden rounded-lg bg-white/10 transition-all duration-300 group-hover:bg-white/15 sm:h-40 sm:w-40">
-                    {/* Placeholder for product image */}
-                    <div className="text-center text-white/30">
-                      <svg
-                        className="mx-auto h-16 w-16 sm:h-20 sm:w-20"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={0.5}
-                          d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+          <div className="relative">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-3 lg:gap-4">
+              {categoryData.items.map((item, index) => {
+                const isLastRowLg = index >= lastRowStartLg
+                const isLastRowSm = index >= lastRowStartSm
+                const isSecondLastRowSm = index >= secondLastRowStartSm && index < lastRowStartSm
+                
+                const productName = typeof item === 'string' ? item : item.name
+                const productImage = typeof item === 'string' ? null : item.image
+                
+                return (
+                  <div
+                    key={`${category}-${index}`}
+                    className={`group relative flex flex-col items-center transition-all duration-300 ${
+                      isLastRowLg ? 'hidden sm:block' : ''
+                    } ${isLastRowSm ? 'mb-8 sm:mb-12' : ''}`}
+                  >
+                    <div className="mb-2 flex aspect-square w-[85%] items-center justify-center overflow-hidden rounded-lg transition-all duration-300 sm:w-[80%]">
+                      {productImage ? (
+                        <Image
+                          src={productImage}
+                          alt={productName}
+                          width={300}
+                          height={300}
+                          className="h-full w-full object-contain"
                         />
-                      </svg>
+                      ) : (
+                        <div className="text-center text-white/30">
+                          <svg
+                            className="mx-auto h-16 w-16 sm:h-20 sm:w-20"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={0.5}
+                              d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                            />
+                          </svg>
+                        </div>
+                      )}
                     </div>
+                    <h3 className="text-center text-xs font-light uppercase tracking-[0.2em] text-white/80 transition-colors duration-300 group-hover:text-white sm:text-sm">
+                      {productName}
+                    </h3>
                   </div>
-                  <h3 className="text-center text-xs font-light uppercase tracking-[0.2em] text-white/80 transition-colors duration-300 group-hover:text-white sm:text-sm">
-                    {item}
-                  </h3>
+                )
+              })}
+            </div>
+
+            {/* Progressive blur/darken gradient overlay - different heights for mobile and desktop */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[80%] bg-gradient-to-t from-black/70 via-black/40 to-transparent backdrop-blur-md sm:h-[70%] sm:from-black/60 sm:via-black/30 sm:backdrop-blur-lg" style={{ maskImage: 'linear-gradient(to top, black 40%, transparent 100%)' }} />
+
+            {/* Overlay CTA - positioned over last row */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-center pb-4 sm:pb-6 lg:pb-8">
+              <div className="pointer-events-auto mb-6 flex flex-col items-center justify-center space-y-4 rounded-2xl border border-white/10 bg-[#4a4538]/95 px-6 py-8 backdrop-blur-sm sm:mb-8 sm:space-y-6 sm:px-16 sm:py-16 lg:mb-12 lg:px-20 lg:py-20">
+                <h2 className="text-center text-xl font-light text-white sm:text-3xl lg:text-4xl" style={{ lineHeight: '1.3' }}>
+                  Ready to start buying<br />wholesale online?
+                </h2>
+                
+                <div className="space-y-2 text-center text-xs text-white/90 sm:space-y-3 sm:text-base">
+                  <div className="flex items-center justify-center gap-2">
+                    <svg className="h-4 w-4 text-white/80 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="font-light tracking-wide">60-day payment terms</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-2">
+                    <svg className="h-4 w-4 text-white/80 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="font-light tracking-wide">Free returns on all opening orders</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-2">
+                    <svg className="h-4 w-4 text-white/80 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="font-light tracking-wide">Unique products curated for your store</span>
+                  </div>
                 </div>
+
+                <button
+                  type="button"
+                  onClick={handleSignIn}
+                  className="mt-2 rounded-lg bg-white px-6 py-2.5 text-xs font-light uppercase tracking-[0.2em] text-[#4a4538] transition-all duration-300 hover:bg-white/90 hover:shadow-lg sm:mt-4 sm:px-12 sm:py-4 sm:text-base"
+                >
+                  Sign up to shop
+                </button>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </main>
