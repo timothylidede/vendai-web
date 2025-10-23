@@ -3,7 +3,8 @@
 import Image from "next/image"
 import Link from "next/link"
 import { notFound, useParams } from "next/navigation"
-import { useCallback } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import type { CSSProperties, TransitionEvent } from "react"
 
 const FONT_STACK = '"Neue Haas Grotesk Display Pro", "Helvetica Neue", Helvetica, Arial, sans-serif'
 
@@ -19,9 +20,9 @@ const CATEGORY_PRODUCTS: Record<string, { name: string; items: (string | Product
     items: [
       { name: "Rice 25kg", image: "/image-gen/products/rice.png" },
       { name: "Cooking Oil 5L", image: "/image-gen/products/cooking-oil.png" },
-      { name: "Sugar 50kg", image: "/image-gen/products/sugar.png" },
+      { name: "Maize Flour 10kg", image: "/image-gen/products/maize-flour.png" },
       { name: "Wheat Flour 25kg", image: "/image-gen/products/wheat-flour.png" },
-      "Maize Flour 10kg",
+      { name: "Sugar 50kg", image: "/image-gen/products/sugar.png" },
       "Salt 1kg",
       "Tea Leaves 500g",
       "Milk Powder 900g",
@@ -282,16 +283,252 @@ const CATEGORY_PRODUCTS: Record<string, { name: string; items: (string | Product
   },
 }
 
+const PAGE_BACKGROUND_STYLE: CSSProperties = {
+  fontFamily: FONT_STACK,
+  backgroundColor: "var(--background)",
+  backgroundImage: `
+    radial-gradient(closest-side at 18% 20%, rgba(56, 189, 248, 0.18), transparent 65%),
+    radial-gradient(farthest-corner at 85% 10%, rgba(59, 130, 246, 0.16), transparent 60%),
+    radial-gradient(closest-side at 50% 100%, rgba(129, 140, 248, 0.14), transparent 70%),
+    linear-gradient(135deg, rgba(6, 12, 23, 0.94), rgba(3, 18, 34, 0.98))
+  `,
+  backgroundAttachment: "fixed",
+}
+
+type Rect = {
+  top: number
+  left: number
+  width: number
+  height: number
+}
+
+type SelectedProductState = {
+  name: string
+  image?: string
+}
+
+type ProductDetailOverlayProps = {
+  product: SelectedProductState
+  originRect: Rect
+  isClosing: boolean
+  onCloseComplete: () => void
+}
+
+function ProductDetailOverlay({ product, originRect, isClosing, onCloseComplete }: ProductDetailOverlayProps) {
+  const initialStyle = useMemo<CSSProperties>(
+    () => ({
+      left: `${originRect.left}px`,
+      top: `${originRect.top}px`,
+      width: `${originRect.width}px`,
+      height: `${originRect.height}px`,
+      borderRadius: "0.5rem",
+    }),
+    [originRect]
+  )
+
+  const [imageStyle, setImageStyle] = useState<CSSProperties>(initialStyle)
+  const [targetMetrics, setTargetMetrics] = useState({ width: originRect.width, top: originRect.top })
+  const [contentVisible, setContentVisible] = useState(false)
+
+  useEffect(() => {
+    setImageStyle(initialStyle)
+    setTargetMetrics({ width: originRect.width, top: originRect.top })
+    setContentVisible(false)
+  }, [initialStyle, originRect])
+
+  useEffect(() => {
+    if (isClosing) {
+      setContentVisible(false)
+      setImageStyle(initialStyle)
+      return
+    }
+
+    const frame = requestAnimationFrame(() => {
+      if (typeof window === "undefined") return
+      const width = Math.min(originRect.width, window.innerWidth * 0.7)
+      const top = Math.max(window.innerHeight * 0.2, 112)
+      setTargetMetrics({ width, top })
+      setImageStyle({
+        left: `calc(50% - ${width / 2}px)`,
+        top: `${top}px`,
+        width: `${width}px`,
+        height: `${width}px`,
+        borderRadius: "0.5rem",
+      })
+    })
+
+    return () => cancelAnimationFrame(frame)
+  }, [initialStyle, isClosing, originRect.width])
+
+  const handleTransitionEnd = useCallback(
+    (event: TransitionEvent<HTMLDivElement>) => {
+      if (event.propertyName !== "top") return
+      if (isClosing) {
+        onCloseComplete()
+        return
+      }
+      setContentVisible(true)
+    },
+    [isClosing, onCloseComplete]
+  )
+
+  const detailsStyle = useMemo<CSSProperties>(
+    () => ({
+      left: "50%",
+      top: `${targetMetrics.top + targetMetrics.width + 24}px`,
+      transform: "translateX(-50%)",
+    }),
+    [targetMetrics.top, targetMetrics.width]
+  )
+
+  return (
+    <div className="fixed inset-0 z-20">
+      <div
+        className={`absolute inset-0 transition-opacity duration-500 ease-out ${
+          isClosing ? "opacity-0" : "opacity-100"
+        }`}
+        style={PAGE_BACKGROUND_STYLE}
+      />
+      <div
+        className="absolute z-20 flex items-center justify-center overflow-hidden transition-[top,left,width,height,border-radius] duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)]"
+        style={{ ...imageStyle, pointerEvents: "none", position: "absolute" }}
+        onTransitionEnd={handleTransitionEnd}
+      >
+        <div className="relative h-full w-full">
+          {product.image ? (
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              sizes="(min-width: 768px) 420px, 70vw"
+              className="object-contain"
+              priority
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-white/30">
+              <svg
+                className="h-24 w-24 sm:h-32 sm:w-32"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={0.5}
+                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                />
+              </svg>
+            </div>
+          )}
+        </div>
+      </div>
+      <div
+        className={`absolute z-20 w-full max-w-sm text-center transition-all duration-300 ease-out ${
+          contentVisible && !isClosing ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
+        }`}
+        style={detailsStyle}
+      >
+        <h1 className="mb-2 text-[9px] font-light uppercase tracking-[0.25em] text-white/90 sm:text-[10px]">
+          {product.name}
+        </h1>
+        <p className="mb-4 text-[9px] font-light uppercase tracking-[0.2em] text-white/70 sm:text-[10px]">
+          $20
+        </p>
+        <button
+          type="button"
+          className="mx-auto flex items-center justify-center rounded-lg bg-white px-6 py-2 text-[9px] font-light uppercase tracking-[0.2em] text-[#0a1929] transition-all duration-300 hover:bg-white/90 hover:shadow-lg sm:text-[10px]"
+        >
+          <svg className="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+          Add to cart
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export default function ProductsPage() {
   const params = useParams()
   const category = params?.category as string
 
   const categoryData = category ? CATEGORY_PRODUCTS[category] : null
+  const [selectedProduct, setSelectedProduct] = useState<SelectedProductState | null>(null)
+  const [originRect, setOriginRect] = useState<Rect | null>(null)
+  const [isClosing, setIsClosing] = useState(false)
+  const imageRefs = useRef<Record<number, HTMLDivElement | null>>({})
 
   const handleSignIn = useCallback(() => {
     if (typeof window === "undefined") return
     window.open("https://app.vendai.digital", "_blank", "noopener,noreferrer")
   }, [])
+
+  const handleProductClick = useCallback(
+    (item: string | ProductItem, index: number) => {
+      if (selectedProduct || isClosing) return
+
+      const productName = typeof item === "string" ? item : item.name
+      const productImage = typeof item === "string" ? undefined : item.image
+      const rect = imageRefs.current[index]?.getBoundingClientRect()
+
+      let nextRect: Rect | null = null
+
+      if (rect) {
+        nextRect = {
+          top: rect.top,
+          left: rect.left,
+          width: rect.width,
+          height: rect.height,
+        }
+      } else if (typeof window !== "undefined") {
+        const width = Math.min(300, window.innerWidth * 0.6)
+        nextRect = {
+          top: window.innerHeight * 0.25,
+          left: (window.innerWidth - width) / 2,
+          width,
+          height: width,
+        }
+      }
+
+      if (!nextRect) return
+
+      setOriginRect(nextRect)
+      setIsClosing(false)
+      setSelectedProduct({ name: productName, image: productImage })
+    },
+    [selectedProduct, isClosing]
+  )
+
+  const handleBackToProducts = useCallback(() => {
+    if (!selectedProduct || isClosing) return
+    setIsClosing(true)
+  }, [selectedProduct, isClosing])
+
+  const handleCloseComplete = useCallback(() => {
+    setSelectedProduct(null)
+    setOriginRect(null)
+    setIsClosing(false)
+  }, [])
+
+  const assignImageRef = useCallback(
+    (index: number) => (node: HTMLDivElement | null) => {
+      imageRefs.current[index] = node
+    },
+    []
+  )
+
+  useEffect(() => {
+    if (!selectedProduct) return
+    if (typeof document === "undefined") return
+
+    const originalOverflow = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+
+    return () => {
+      document.body.style.overflow = originalOverflow
+    }
+  }, [selectedProduct])
 
   if (!categoryData) {
     notFound()
@@ -306,42 +543,51 @@ export default function ProductsPage() {
   const lastRowStartLg = Math.floor((totalItems - 1) / columns) * columns
   const lastRowStartSm = Math.floor((totalItems - 1) / columnsSmall) * columnsSmall
   
-  // Calculate second-to-last row for small screens
-  const secondLastRowStartSm = lastRowStartSm - columnsSmall
-
   return (
     <div
       className="relative min-h-screen text-white antialiased"
-      style={{ 
-        fontFamily: FONT_STACK,
-        backgroundColor: 'var(--background)',
-        backgroundImage: `
-          radial-gradient(closest-side at 18% 20%, rgba(56, 189, 248, 0.18), transparent 65%),
-          radial-gradient(farthest-corner at 85% 10%, rgba(59, 130, 246, 0.16), transparent 60%),
-          radial-gradient(closest-side at 50% 100%, rgba(129, 140, 248, 0.14), transparent 70%),
-          linear-gradient(135deg, rgba(6, 12, 23, 0.94), rgba(3, 18, 34, 0.98))
-        `,
-        backgroundAttachment: 'fixed'
-      }}
+      style={PAGE_BACKGROUND_STYLE}
     >
       {/* Header */}
       <header className="fixed inset-x-0 top-0 z-30 overflow-hidden bg-[color:var(--background)]/75 px-3 py-1 text-[10px] tracking-[0.12em] text-white backdrop-blur-sm sm:px-6 sm:py-2 sm:text-sm sm:tracking-[0.15em]">
         <div className="flex h-full items-center justify-between">
-          <Link href="/" className="group flex items-center transition-opacity duration-300 hover:opacity-70">
-            <svg 
-              className="h-5 w-5 sm:h-6 sm:w-6" 
-              fill="none" 
-              viewBox="0 0 24 24" 
-              stroke="currentColor"
-              strokeWidth={1.5}
+          {selectedProduct ? (
+            <button
+              onClick={handleBackToProducts}
+              className="group flex items-center transition-opacity duration-300 hover:opacity-70"
+              aria-label="Back to all products"
             >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                d="M15 19l-7-7 7-7" 
-              />
-            </svg>
-          </Link>
+              <svg 
+                className="h-5 w-5 sm:h-6 sm:w-6" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+                strokeWidth={1.5}
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  d="M15 19l-7-7 7-7" 
+                />
+              </svg>
+            </button>
+          ) : (
+            <Link href="/" className="group flex items-center transition-opacity duration-300 hover:opacity-70">
+              <svg 
+                className="h-5 w-5 sm:h-6 sm:w-6" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+                strokeWidth={1.5}
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  d="M15 19l-7-7 7-7" 
+                />
+              </svg>
+            </Link>
+          )}
           <span className="absolute left-1/2 -translate-x-1/2 text-[9px] font-light uppercase tracking-[0.25em] text-white/90 sm:text-[10px]">
             {categoryData.name}
           </span>
@@ -356,102 +602,139 @@ export default function ProductsPage() {
         </div>
       </header>
 
+      {selectedProduct && originRect && (
+        <ProductDetailOverlay
+          product={selectedProduct}
+          originRect={originRect}
+          isClosing={isClosing}
+          onCloseComplete={handleCloseComplete}
+        />
+      )}
+
       {/* Main Content */}
       <main className="pt-16 sm:pt-24">
         <div className="w-full">
           {/* Product Grid */}
-          <div className="relative">
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-3 lg:gap-4">
-              {categoryData.items.map((item, index) => {
-                const isLastRowLg = index >= lastRowStartLg
-                const isLastRowSm = index >= lastRowStartSm
-                const isSecondLastRowSm = index >= secondLastRowStartSm && index < lastRowStartSm
-                
-                const productName = typeof item === 'string' ? item : item.name
-                const productImage = typeof item === 'string' ? null : item.image
-                
-                return (
-                  <div
-                    key={`${category}-${index}`}
-                    className={`group relative flex flex-col items-center transition-all duration-300 ${
-                      isLastRowLg ? 'hidden sm:block' : ''
-                    } ${isLastRowSm ? 'mb-8 sm:mb-12' : ''}`}
-                  >
-                    <div className="mb-2 flex aspect-square w-[85%] items-center justify-center overflow-hidden rounded-lg transition-all duration-300 sm:w-[80%]">
-                      {productImage ? (
-                        <Image
-                          src={productImage}
-                          alt={productName}
-                          width={300}
-                          height={300}
-                          className="h-full w-full object-contain"
-                        />
-                      ) : (
-                        <div className="text-center text-white/30">
-                          <svg
-                            className="mx-auto h-16 w-16 sm:h-20 sm:w-20"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={0.5}
-                              d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                            />
-                          </svg>
-                        </div>
-                      )}
+          <div
+            className={`relative transition-opacity duration-300 ${
+              selectedProduct ? 'pointer-events-none' : ''
+            } ${selectedProduct && !isClosing ? 'opacity-0' : 'opacity-100'}`}
+            aria-hidden={Boolean(selectedProduct)}
+          >
+            <div className="grid grid-cols-2 gap-x-1 gap-y-6 sm:grid-cols-3 sm:gap-x-2 sm:gap-y-8 lg:gap-x-3 lg:gap-y-10">
+                {categoryData.items.map((item, index) => {
+                  const isLastRowLg = index >= lastRowStartLg
+                  const isLastRowSm = index >= lastRowStartSm
+                  
+                  const productName = typeof item === 'string' ? item : item.name
+                  const productImage = typeof item === 'string' ? null : item.image
+                  
+                  return (
+                    <button
+                      key={`${category}-${index}`}
+                      type="button"
+                      onClick={() => handleProductClick(item, index)}
+                      className={`group relative flex flex-col items-center transition-all duration-300 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 ${
+                        isLastRowLg ? 'hidden sm:block' : ''
+                      } ${isLastRowSm ? 'mb-8 sm:mb-12' : ''}`}
+                      aria-label={`View ${productName}`}
+                    >
+                      <div
+                        ref={assignImageRef(index)}
+                        className="mb-2 flex aspect-square w-[70%] items-center justify-center overflow-hidden rounded-lg transition-all duration-300 sm:w-[65%]"
+                      >
+                        {productImage ? (
+                          <Image
+                            src={productImage}
+                            alt={productName}
+                            width={300}
+                            height={300}
+                            className="h-full w-full object-contain"
+                          />
+                        ) : (
+                          <div className="text-center text-white/30">
+                            <svg
+                              className="mx-auto h-16 w-16 sm:h-20 sm:w-20"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={0.5}
+                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                              />
+                            </svg>
+                          </div>
+                        )}
+                      </div>
+                      <h3 className="text-center text-[9px] font-light uppercase tracking-[0.2em] text-white/80 transition-colors duration-300 group-hover:text-white sm:text-[10px]">
+                        {productName}
+                      </h3>
+                    </button>
+                  )
+                })}
+              </div>
+
+              {/* Progressive blur/darken gradient overlay - different heights for mobile and desktop */}
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[80%] bg-gradient-to-t from-black/70 via-black/40 to-transparent backdrop-blur-md sm:h-[70%] sm:from-black/60 sm:via-black/30 sm:backdrop-blur-lg" style={{ maskImage: 'linear-gradient(to top, black 40%, transparent 100%)' }} />
+
+              {/* Overlay CTA - positioned over last row */}
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-center pb-2 sm:pb-3 lg:pb-4">
+                <div className="pointer-events-auto relative mb-2 flex w-[95%] max-w-6xl flex-col overflow-hidden rounded-2xl border border-white/20 backdrop-blur-xl sm:mb-3 sm:flex-row lg:mb-4" 
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(6, 12, 23, 0.85), rgba(3, 18, 34, 0.9))',
+                    boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)'
+                  }}>
+                  {/* Left side - Content */}
+                  <div className="flex flex-1 flex-col items-start justify-center space-y-4 px-6 py-8 sm:space-y-6 sm:px-12 sm:py-16 lg:px-16 lg:py-20">
+                    <h2 className="text-left text-xl font-light text-white sm:text-3xl lg:text-4xl" style={{ lineHeight: '1.3' }}>
+                      Ready to start buying<br />wholesale online?
+                    </h2>
+                    
+                    <div className="space-y-2 text-left text-xs text-white/90 sm:space-y-3 sm:text-base">
+                      <div className="flex items-center gap-2">
+                        <svg className="h-4 w-4 flex-shrink-0 text-white/80 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span className="font-light tracking-wide">60-day payment terms</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <svg className="h-4 w-4 flex-shrink-0 text-white/80 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span className="font-light tracking-wide">Free returns on all opening orders</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <svg className="h-4 w-4 flex-shrink-0 text-white/80 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span className="font-light tracking-wide">Unique products curated for your store</span>
+                      </div>
                     </div>
-                    <h3 className="text-center text-xs font-light uppercase tracking-[0.2em] text-white/80 transition-colors duration-300 group-hover:text-white sm:text-sm">
-                      {productName}
-                    </h3>
-                  </div>
-                )
-              })}
-            </div>
 
-            {/* Progressive blur/darken gradient overlay - different heights for mobile and desktop */}
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[80%] bg-gradient-to-t from-black/70 via-black/40 to-transparent backdrop-blur-md sm:h-[70%] sm:from-black/60 sm:via-black/30 sm:backdrop-blur-lg" style={{ maskImage: 'linear-gradient(to top, black 40%, transparent 100%)' }} />
+                    <button
+                      type="button"
+                      onClick={handleSignIn}
+                      className="mt-2 rounded-lg bg-white px-6 py-2.5 text-xs font-light uppercase tracking-[0.2em] text-[#0a1929] transition-all duration-300 hover:bg-white/90 hover:shadow-lg sm:mt-4 sm:px-12 sm:py-4 sm:text-base"
+                    >
+                      Sign up to buy
+                    </button>
+                  </div>
 
-            {/* Overlay CTA - positioned over last row */}
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-center pb-4 sm:pb-6 lg:pb-8">
-              <div className="pointer-events-auto mb-6 flex flex-col items-center justify-center space-y-4 rounded-2xl border border-white/10 bg-[#4a4538]/95 px-6 py-8 backdrop-blur-sm sm:mb-8 sm:space-y-6 sm:px-16 sm:py-16 lg:mb-12 lg:px-20 lg:py-20">
-                <h2 className="text-center text-xl font-light text-white sm:text-3xl lg:text-4xl" style={{ lineHeight: '1.3' }}>
-                  Ready to start buying<br />wholesale online?
-                </h2>
-                
-                <div className="space-y-2 text-center text-xs text-white/90 sm:space-y-3 sm:text-base">
-                  <div className="flex items-center justify-center gap-2">
-                    <svg className="h-4 w-4 text-white/80 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span className="font-light tracking-wide">60-day payment terms</span>
-                  </div>
-                  <div className="flex items-center justify-center gap-2">
-                    <svg className="h-4 w-4 text-white/80 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span className="font-light tracking-wide">Free returns on all opening orders</span>
-                  </div>
-                  <div className="flex items-center justify-center gap-2">
-                    <svg className="h-4 w-4 text-white/80 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span className="font-light tracking-wide">Unique products curated for your store</span>
+                  {/* Right side - Image */}
+                  <div className="relative hidden sm:block sm:w-2/5">
+                    <Image
+                      src="/woman.png"
+                      alt="Store owner"
+                      width={500}
+                      height={500}
+                      className="h-full w-full object-cover"
+                    />
                   </div>
                 </div>
-
-                <button
-                  type="button"
-                  onClick={handleSignIn}
-                  className="mt-2 rounded-lg bg-white px-6 py-2.5 text-xs font-light uppercase tracking-[0.2em] text-[#4a4538] transition-all duration-300 hover:bg-white/90 hover:shadow-lg sm:mt-4 sm:px-12 sm:py-4 sm:text-base"
-                >
-                  Sign up to shop
-                </button>
               </div>
-            </div>
           </div>
         </div>
       </main>
