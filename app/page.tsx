@@ -393,7 +393,7 @@ export default function HomePage() {
 
   const handleSignIn = useCallback(() => {
     if (typeof window === "undefined") return
-    window.open("https://app.vendai.digital", "_blank", "noopener,noreferrer")
+    window.location.href = "https://app.vendai.digital"
   }, [])
 
   return (
